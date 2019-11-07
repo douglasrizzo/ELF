@@ -13,13 +13,13 @@ from ..args_provider import ArgsProvider
 
 class ValueMatcher:
     def __init__(self):
-        ''' Initialize value matcher.
+        """ Initialize value matcher.
         Accepted arguments:
 
         ``grad_clip_norm`` : Gradient norm clipping
 
         ``value_node``:  name of the value node
-        '''
+        """
         self.args = ArgsProvider(
             call_from = self,
             define_args = [
@@ -30,12 +30,12 @@ class ValueMatcher:
         )
 
     def _init(self, _):
-        ''' Initialize value loss to be ``nn.SmoothL1Loss``. '''
+        """ Initialize value loss to be ``nn.SmoothL1Loss``. """
         self.value_loss = nn.SmoothL1Loss().cuda()
         self.value_node = self.args.value_node
 
     def _reg_backward(self, v):
-        ''' Register the backward hook. Clip the gradient if necessary.'''
+        """ Register the backward hook. Clip the gradient if necessary."""
         grad_clip_norm = getattr(self.args, "grad_clip_norm", None)
         if grad_clip_norm:
             def bw_hook(grad_in):
@@ -47,7 +47,7 @@ class ValueMatcher:
             v.register_hook(bw_hook)
 
     def feed(self, batch, stats):
-        '''
+        """
         One iteration of value match.
 
         nabla_w Loss(V - target)
@@ -64,7 +64,7 @@ class ValueMatcher:
 
         Returns:
             value_err
-        '''
+        """
         V = batch[self.value_node]
         value_err = self.value_loss(V, Variable(batch["target"]))
         self._reg_backward(V)

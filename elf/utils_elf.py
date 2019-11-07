@@ -13,7 +13,7 @@ import torch
 
 
 class Batch:
-    ''' A wrapper class for batch data'''
+    """ A wrapper class for batch data"""
     torch_types = {
         "int32_t" : torch.IntTensor,
         "int64_t" : torch.LongTensor,
@@ -30,7 +30,7 @@ class Batch:
     }
 
     def __init__(self, _batchsize=None, **kwargs):
-        ''' Initialize `Batch` class. Pass in a dict and wrap it into ``self.batch``'''
+        """ Initialize `Batch` class. Pass in a dict and wrap it into ``self.batch``"""
         if isinstance(_batchsize, int):
             self.batch = { k : v[:, :_batchsize] for k, v in kwargs.items() }
         else:
@@ -70,7 +70,7 @@ class Batch:
 
     @staticmethod
     def load(GC, input_reply, desc, group_id, use_gpu=True, use_numpy=False):
-        '''load Batch from the specifications
+        """load Batch from the specifications
 
         Args:
             GC(C++ class): Game Context
@@ -82,7 +82,7 @@ class Batch:
 
         Returns:
             loaded batch object
-        '''
+        """
         batch = Batch()
         batch.dims = { }
         batch.GC = GC
@@ -101,11 +101,11 @@ class Batch:
         return batch
 
     def __getitem__(self, key):
-        ''' Get a key from batch. Can be either ``key`` or ``last_key``
+        """ Get a key from batch. Can be either ``key`` or ``last_key``
 
         Args:
             key(str): key name. e.g. if ``r`` is passed in, will search for ``r`` or ``last_r``
-        '''
+        """
         if key in self.batch:
             return self.batch[key]
         else:
@@ -116,10 +116,10 @@ class Batch:
                 raise KeyError("Batch(): specified key: %s or %s not found!" % (key, key_with_last))
 
     def add(self, key, value):
-        '''
+        """
         Add key=value in Batch. This is used when you want to send additional state to the
         learning algorithm, e.g., hidden state collected from the previous iterations.
-        '''
+        """
         self.batch[key] = value
         return self
 
@@ -127,16 +127,16 @@ class Batch:
         return key in self.batch or "last_" + key in self.batch
 
     def setzero(self):
-        ''' Set all tensors in the batch to 0 '''
+        """ Set all tensors in the batch to 0 """
         for _, v in self.batch.items():
             v[:] = 0
 
     def copy_from(self, src, batch_key=""):
-        ''' copy all keys and values from another dict or `Batch` object
+        """ copy all keys and values from another dict or `Batch` object
 
         Args:
             src(dict or `Batch`): batch data to be copied
-        '''
+        """
         this_src = src if isinstance(src, dict) else src.batch
         key_assigned = { k : False for k in self.batch.keys() }
 
@@ -165,23 +165,23 @@ class Batch:
                 raise ValueError("Batch[%s].copy_from: Reply[%s] is not assigned" % (batch_key, k))
 
     def cpu2gpu(self, gpu=0):
-        ''' call ``cuda()`` on all batch data
+        """ call ``cuda()`` on all batch data
 
         Args:
             gpu(int): gpu id
-        '''
+        """
         batch = Batch(**{ k : v.cuda(gpu) for k, v in self.batch.items() })
         batch.GC = self.GC
         return batch
 
     def hist(self, s, key=None):
-        '''
+        """
         return batch history.
 
         Args:
             s(int): s=1 means going back in time by one step, etc
             key(str): if None, return all key's history, otherwise just return that key's history
-        '''
+        """
         if key is None:
             new_batch = Batch(**{ k : v[s] for k, v in self.batch.items() })
             if hasattr(self, "GC"):
@@ -191,31 +191,31 @@ class Batch:
             return self[key][s]
 
     def transfer_cpu2gpu(self, batch_gpu):
-        ''' transfer batch data to gpu '''
+        """ transfer batch data to gpu """
         # For each time step
         for k, v in self.batch.items():
             batch_gpu[k].copy_(v)
 
     def transfer_cpu2cpu(self, batch_dst):
-        ''' transfer batch data to cpu '''
+        """ transfer batch data to cpu """
 
         # For each time step
         for k, v in self.batch.items():
             batch_dst[k].copy_(v)
 
     def pin_clone(self):
-        ''' clone and pin memory for faster transportations to gpu '''
+        """ clone and pin memory for faster transportations to gpu """
 
         return Batch(**{ k : v.clone().pin_memory() for k, v in self.batch.items() })
 
     def to_numpy(self):
-        ''' convert batch data to numpy format '''
+        """ convert batch data to numpy format """
         return { k : v.numpy() if not isinstance(v, np.ndarray) else v for k, v in self.batch.items() }
 
 
 class GCWrapper:
     def __init__(self, GC, co, descriptions, use_numpy=False, gpu=None, params=dict()):
-        '''Initialize GCWarpper
+        """Initialize GCWarpper
 
         Parameters:
             GC(C++ class): Game Context
@@ -224,7 +224,7 @@ class GCWrapper:
             use_numpy(boolean): whether we use numpy array (or PyTorch tensors)
             gpu(int): gpu to use.
             params(dict): additional parameters
-        '''
+        """
 
         self._init_collectors(GC, co, descriptions, use_gpu=gpu is not None, use_numpy=use_numpy)
         self.gpu = gpu
@@ -312,14 +312,14 @@ class GCWrapper:
             return False
 
     def reg_callback(self, key, cb):
-        '''Set callback function for key
+        """Set callback function for key
 
         Parameters:
             key(str): the key used to register the callback function.
               If the key is not present in the descriptions, return ``False``.
             cb(function): the callback function to be called.
               The callback function has the signature ``cb(input_batch, input_batch_gpu, reply_batch)``.
-        '''
+        """
         if key not in self.name2idx:
             raise ValueError("Callback[%s] is not in the specification" % key)
         if cb is None:
@@ -334,7 +334,7 @@ class GCWrapper:
             raise ValueError("info.gid[%d] is not in callback functions" % infos.gid)
 
         if self._cb[infos.gid] is None:
-            return;
+            return
 
         batchsize = len(infos.s)
 
@@ -373,7 +373,7 @@ class GCWrapper:
                     raise ValueError("GCWrapper.Start(): No callback function for key = %s and gid = %d" % (key, gid))
 
     def Run(self):
-        '''Wait group of an arbitrary collector key. Samples in a returned batch are always from the same group, but the group key of the batch may be arbitrary.'''
+        """Wait group of an arbitrary collector key. Samples in a returned batch are always from the same group, but the group key of the batch may be arbitrary."""
         # print("before wait")
         self.infos = self.GC.Wait(0)
         # print("before calling")
@@ -383,22 +383,22 @@ class GCWrapper:
         return res
 
     def Start(self):
-        '''Start all game environments'''
+        """Start all game environments"""
         self._check_callbacks()
         self.GC.Start()
 
     def Stop(self):
-        '''Stop all game environments. :func:`Start()` cannot be called again after :func:`Stop()` has been called.'''
+        """Stop all game environments. :func:`Start()` cannot be called again after :func:`Stop()` has been called."""
         self.GC.Stop()
 
     def reg_sig_int(self):
         import signal
-        def signal_handler(s, frame):
+        def signal_handler():
             print('Detected Ctrl-C!')
             self.Stop()
             sys.exit(0)
         signal.signal(signal.SIGINT, signal_handler)
 
     def PrintSummary(self):
-        '''Print summary'''
+        """Print summary"""
         self.GC.PrintSummary()

@@ -77,7 +77,7 @@ class Model_ActorCritic(Model):
         return dict(h=h, V=value, pi=policy, action_type=0)
 
     def transition(self, h, a):
-        ''' A transition model that could predict the future given the current state and its action '''
+        """ A transition model that could predict the future given the current state and its action """
         h = self._var(h)
         na = self.params["num_action"]
         a_onehot = h.data.clone().resize_(a.size(0), na).zero_()

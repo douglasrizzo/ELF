@@ -29,7 +29,7 @@ class RNNActorCritic:
         )
 
     def update(self, mi, batch, hiddens, stats):
-        ''' Actor critic model '''
+        """ Actor critic model """
         m = mi["model"]
         args = self.args
         value_node = self.args.value_node

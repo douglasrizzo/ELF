@@ -36,7 +36,7 @@ class ActorCriticChanged:
         self.rank_loss = nn.MarginRankingLoss().cuda()
 
     def update(self, mi, batch, stats):
-        ''' Actor critic model '''
+        """ Actor critic model """
         m = mi["model"]
         args = self.args
 

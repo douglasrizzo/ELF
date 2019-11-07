@@ -23,10 +23,10 @@ class HistState:
                     q.append(self.init_state_func())
 
     def feed(self, ids, hiddens):
-        '''
+        """
         h[0] is the oldest element (left-most),
         h[-1] is the newest element (right-most)
-        '''
+        """
 
         for id, h in zip(ids, hiddens):
             q = self.hs[id]

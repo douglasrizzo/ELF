@@ -27,7 +27,7 @@ Usage:
 '''
 
 class Cond:
-    ''' Wrapper for `Condition` class from torch multiprocessing'''
+    """ Wrapper for `Condition` class from torch multiprocessing"""
     def __init__(self):
         self.cond = mp.Condition()
 
@@ -47,13 +47,13 @@ class Cond:
         self.cond.release()
 
 class ParameterServer(object):
-    ''' ParameterServer to handle updates in the model concurrently '''
+    """ ParameterServer to handle updates in the model concurrently """
     def __init__(self, n_processes):
-        ''' Initialization.
+        """ Initialization.
 
         Args:
             n_processes: number of processes.
-        '''
+        """
         self.queue = mp.Queue()
         self.n_processes = n_processes
         self.barrier = mp.Barrier(n_processes)
@@ -62,17 +62,17 @@ class ParameterServer(object):
         self.recv_done = Cond()
 
     def __getstate__(self):
-        return (self.queue, self.barrier, self.n_processes, self.send_done, self.recv_done)
+        return self.queue, self.barrier, self.n_processes, self.send_done, self.recv_done
 
     def __setstate__(self, state):
         self.queue, self.barrier, self.n_processes, self.send_done, self.recv_done = state
 
     def server_send_model(self, mi):
-        ''' Send the model to others and starts to wait. Finish waiting if all client receives the model.
+        """ Send the model to others and starts to wait. Finish waiting if all client receives the model.
 
         Args:
             mi(`ModelInterface`): model interface to send
-        '''
+        """
         assert mi is not None
         for i in range(self.n_processes-1):
             self.queue.put(mi)
@@ -81,11 +81,11 @@ class ParameterServer(object):
         self.barrier.wait()
 
     def client_receive_model(self):
-        ''' Receive model from the queue. Finish waiting if all client receives the model.
+        """ Receive model from the queue. Finish waiting if all client receives the model.
 
         Returns:
             `ModelInterface` shared in clients.
-        '''
+        """
         mi = self.queue.get()
         # clone the gradients to break the sharing
         for _, model in mi.models.items():
@@ -98,13 +98,13 @@ class ParameterServer(object):
         return self._client_shared_mi
 
     def server_update_model(self, key, new_mi, noblock=False):
-        ''' Update shared model in the server, wait until all clients receive.
+        """ Update shared model in the server, wait until all clients receive.
 
         Args:
             key(str): the key in ``models`` to update
             new_mi(`ModelInterface`): new model interface to update
             noblock(bool): indicates if updating models block other threads. Default is blocking.
-        '''
+        """
         # if recv is not done, skip it.
         if noblock:
             try:
@@ -122,7 +122,7 @@ class ParameterServer(object):
         return True
 
     def client_refresh_model(self, gpu=None, skip=False):
-        ''' Clone updated shared model from the server.
+        """ Clone updated shared model from the server.
 
         Args:
             gpu(int): gpu index
@@ -130,7 +130,7 @@ class ParameterServer(object):
 
         Returns:
             refreshed model.
-        '''
+        """
 
         # First wait until we are synced up.
         self.send_done.wait()
@@ -146,7 +146,7 @@ class SharedData:
                  cb_remote_initialize=None,
                  cb_remote_batch_process=None,
                  args=None):
-        ''' Initialize `SharedData` class with a few hooks
+        """ Initialize `SharedData` class with a few hooks
 
         Args:
             total_process: number of processes
@@ -155,7 +155,7 @@ class SharedData:
             cb_remote_initialize: Callbacks for remote Initialization
             cb_remote_batch_process: Callbacks for remote process
             args: additional arguments
-        '''
+        """
         self.server = ParameterServer(total_process)
         self.cb_remote_initialize = cb_remote_initialize
         self.cb_remote_batch_process = cb_remote_batch_process
@@ -193,12 +193,12 @@ class SharedData:
         self.server.server_send_model(mi)
 
     def process_main(self, i, gpu_id):
-        ''' Main process. Transportation between cpu and gpu.
+        """ Main process. Transportation between cpu and gpu.
 
         Args:
             i(int): process id
             gpu_id(int): gpu id
-        '''
+        """
         batch = self.qs[i].get()
         self.b.wait()
 
@@ -218,20 +218,9 @@ class SharedData:
             self.cb_remote_batch_process(context, batch_gpu)
 
     def send_batch(self, batch):
-        ''' Send batch to a cpu process
+        """ Send batch to a cpu process
 
         Args:
             batch(dict): batch data
-        '''
+        """
         process_idx = random.randint(0, len(self.shared_batches) - 1)
-        try:
-            self.cvs_send[process_idx].wait_noblock()
-            utils_elf.transfer_cpu2cpu(batch, self.shared_batches[process_idx])
-            self.cvs_recv[process_idx].notify()
-            return True
-        except Exception as e:
-            #print("Failed to send batch to %d" % process_idx)
-            #print(type(e))
-            #print(e.args)
-            #print(e)
-            return False

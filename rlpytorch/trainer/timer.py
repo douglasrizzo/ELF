@@ -10,7 +10,7 @@ from datetime import datetime
 
 
 class RLTimer:
-    ''' A customized timer class'''
+    """ A customized timer class"""
     def __init__(self):
         self.overall_counts = defaultdict(int)
         self.last_overall_mark = defaultdict(lambda : -1)

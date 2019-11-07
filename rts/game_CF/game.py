@@ -42,11 +42,11 @@ if __name__ == '__main__':
     args = ArgsProvider.Load(parser, [loader])
 
     def actor(batch):
-        '''
+        """
         import pdb
         pdb.set_trace()
         pickle.dump(utils_elf.to_numpy(sel), open("tmp%d.bin" % k, "wb"), protocol=2)
-        '''
+        """
         return dict(a=[0]*batch["s"].size(1))
 
     GC = loader.initialize()

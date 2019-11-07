@@ -138,7 +138,7 @@ class CategoryCounter:
 
 class DelayedStats:
     def __init__(self, prefix, max_delay=5):
-        ''' self.entries[key][t] gives the value of key at time t '''
+        """ self.entries[key][t] gives the value of key at time t """
         self.prefix = prefix
         self.max_delay = max_delay
         self.reset()
@@ -150,10 +150,10 @@ class DelayedStats:
         self.baseline_entries = [ defaultdict(dict) for i in range(self.max_delay) ]
 
     def feed(self, ts, ids, curr, pred_diff, curr_cb=None, diff_cb=None):
-        ''' Check keys in curr and pred, if there is any key starts with 'fa_',
+        """ Check keys in curr and pred, if there is any key starts with 'fa_',
             collect them and compare against each other. For example (suppose we are at time t):
               num_unit_T2: predicted difference: curr["num_unit"] (at time t + 2) - curr["num_unit"] (at time t).
-        '''
+        """
         # curr[key][i] -> value, ids[i] -> id
         for k, v in curr.items():
             if not k.startswith(self.prefix): continue

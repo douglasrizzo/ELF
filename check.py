@@ -28,8 +28,8 @@ class StatsCollector:
         pdb.set_trace()
         raise ValueError(prompt)
 
-    def actor(self, sel, sel_gpu):
-        '''Check the states for an episode.'''
+    def actor(self, sel):
+        """Check the states for an episode."""
         b = sel.hist(0)
         batchsize = b["id"].size(0)
         # import pdb

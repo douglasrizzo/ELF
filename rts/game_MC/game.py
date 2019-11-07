@@ -103,11 +103,11 @@ if __name__ == '__main__':
     cnt_project = 0
 
     def actor(batch):
-        '''
+        """
         import pdb
         pdb.set_trace()
         pickle.dump(utils_elf.to_numpy(sel), open("tmp%d.bin" % k, "wb"), protocol=2)
-        '''
+        """
         return dict(a=[0]*batch["s"].size(1))
 
     def reduced_predict(batch):

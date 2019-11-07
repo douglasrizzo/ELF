@@ -11,13 +11,13 @@ from ..args_provider import ArgsProvider
 
 class SingleProcessRun:
     def __init__(self):
-        ''' Initialization for SingleProcessRun. Accepted arguments:
+        """ Initialization for SingleProcessRun. Accepted arguments:
         ``num_minibatch``,
 
         ``num_episode``,
 
         ``tqdm``
-        '''
+        """
         self.args = ArgsProvider(
             call_from = self,
             define_args = [
@@ -28,24 +28,24 @@ class SingleProcessRun:
         )
 
     def setup(self, GC, episode_start=None, episode_summary=None):
-        ''' Setup for SingleProcessRun.
+        """ Setup for SingleProcessRun.
 
         Args:
             GC(`GameContext`): Game Context
             episode_start(func): operations to perform before each episode
             episode_summary(func): operations to summarize after each epidsode
-        '''
+        """
         self.GC = GC
         self.episode_summary = episode_summary
         self.episode_start = episode_start
 
     def run(self):
-        ''' Main training loop. Initialize Game Context and looping the required episodes.
+        """ Main training loop. Initialize Game Context and looping the required episodes.
             Call episode_start and episode_summary before and after each episode if necessary.
             Visualize with a progress bar if ``tqdm`` is set.
             Print training stats after each episode.
             In the end, print summary for game context and stop it.
-        '''
+        """
         self.GC.Start()
         args = self.args
         for k in range(args.num_episode):
@@ -64,7 +64,7 @@ class SingleProcessRun:
         self.GC.Stop()
 
     def run_multithread(self):
-        ''' Start training in a multithreaded environment '''
+        """ Start training in a multithreaded environment """
         def train_thread():
             args = self.args
             for i in range(args.num_episode):

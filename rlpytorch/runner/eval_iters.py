@@ -10,13 +10,13 @@ from ..stats import Stats
 
 class EvalIters:
     def __init__(self):
-        ''' Initialization for Evaluation.
+        """ Initialization for Evaluation.
         Accepted arguments:
 
         ``num_eval``: number of games to evaluate,
 
         ``tqdm`` : if used, visualize progress bar
-        '''
+        """
         self.stats = Stats("eval")
         self.args = ArgsProvider(
             call_from = self,
@@ -32,11 +32,11 @@ class EvalIters:
         self.stats.reset()
 
     def iters(self):
-        ''' loop through until we reach ``args.num_eval`` games.
-        
+        """ loop through until we reach ``args.num_eval`` games.
+
             if use ``tqdm``, also visualize the progress bar.
             Print stats summary in the end.
-        '''
+        """
         if self.args.tqdm:
             import tqdm
             tq = tqdm.tqdm(total=self.args.num_eval, ncols=50)

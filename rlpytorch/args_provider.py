@@ -10,7 +10,7 @@ from copy import deepcopy
 
 
 def recursive_map(x, f):
-    ''' Act a function ``f`` on ``x``. Recursively act on its items if ``x`` is a dict or list'''
+    """ Act a function ``f`` on ``x``. Recursively act on its items if ``x`` is a dict or list"""
     if isinstance(x, dict):
         return { k : recursive_map(v, f) for k, v in x.items() }
     elif isinstance(x, list):
@@ -26,12 +26,12 @@ class Args:
         self._args_options = args_options
 
     def replace(self, keys):
-        '''
+        """
         keys = [ (old_key1, new_key1), (old_key2, new_key2), ... ]
 
         Returns:
             Replaced list of keys
-        '''
+        """
         res = deepcopy(self)
         for old_key, new_key in keys:
             if hasattr(res, old_key):
@@ -40,11 +40,11 @@ class Args:
         return res
 
     def add_cmdline(self):
-        ''' set ``command_line`` attribute, joined by ``sys.argv``'''
+        """ set ``command_line`` attribute, joined by ``sys.argv``"""
         setattr(self, "command_line", " ".join(sys.argv))
 
     def print_info(self):
-        ''' Print args '''
+        """ Print args """
         def stringify(x):
             if isinstance(x, str): return "\"" + x + "\""
             else: return str(x)
@@ -67,7 +67,7 @@ class Args:
 
 class ArgsProvider:
     def __init__(self, define_args=[], more_args=[], on_get_args=None, call_from=None, child_providers=[], child_transforms=None):
-        '''Define arguments to be loaded from the command line. Example usage
+        """Define arguments to be loaded from the command line. Example usage
         ::
             args = ArgsProvider(
                 define_args = [
@@ -93,7 +93,7 @@ class ArgsProvider:
             child_transforms(list of functions): Transform parent parameters to child parameters.
             global_defaults(dict of key and their default values): change default values of some parameters (the parameters can be defined elsewhere). If there is a collision, the program will err.
             global_overrides(dict of key and their overridden values): change the value of some parameters (the parameters can be defined elsewhere). If there is a collison, the program will err.
-        '''
+        """
 
         def make_regular(options):
             if isinstance(options, (int, float, str)):
@@ -113,7 +113,7 @@ class ArgsProvider:
         self._call_from = call_from
 
     def get_define_keys(self):
-        ''' return all keys in _define_args in a list '''
+        """ return all keys in _define_args in a list """
         return [ k for k, _ in self._define_args ]
 
 
@@ -188,7 +188,7 @@ class ArgsProvider:
 
     @staticmethod
     def Load(parser, args_providers, cmd_line=sys.argv[1:], global_defaults=dict(), global_overrides=dict()):
-        '''Load args from ``cmd_line``
+        """Load args from ``cmd_line``
 
         Parameters:
             parser(ArgumentParser): The argument parser.
@@ -197,7 +197,7 @@ class ArgsProvider:
 
         Returns:
             A class instance whose attributes contain all loaded arguments.
-        '''
+        """
         args_providers = recursive_map(args_providers, ArgsProvider._GetProvider)
 
         args_list = []

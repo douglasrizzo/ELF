@@ -105,7 +105,7 @@ class Model_RNNActorCritic(Model):
         return self.decision(output)
 
     def transition(self, h, a):
-        ''' A transition model that could predict the future given the current state and its action '''
+        """ A transition model that could predict the future given the current state and its action """
         if not self.args.enable_transition_model:
             return h
 

@@ -8,9 +8,9 @@ from ..args_provider import ArgsProvider
 
 class DiscountedReward:
     def __init__(self):
-        ''' Initialization discounted_reward.
+        """ Initialization discounted_reward.
         Accepted arguments:
-        ``discount``: discount factor of reward.'''
+        ``discount``: discount factor of reward."""
         self.args = ArgsProvider(
             call_from = self,
             define_args = [
@@ -19,12 +19,12 @@ class DiscountedReward:
         )
 
     def setR(self, R, stats):
-        ''' Set rewards and feed to stats'''
+        """ Set rewards and feed to stats"""
         self.R = R
         stats["init_reward"].feed(R.mean().item())
 
     def feed(self, batch, stats):
-        '''
+        """
         Update discounted reward and feed to stats.
 
         Keys in a batch:
@@ -34,7 +34,7 @@ class DiscountedReward:
         ``terminal`` (tensor): whether the current game has terminated.
 
         Feed to stats: immediate reward and accumulated reward
-        '''
+        """
         r = batch["r"]
         term = batch["terminal"]
 

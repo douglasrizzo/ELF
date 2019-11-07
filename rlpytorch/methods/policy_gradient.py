@@ -14,7 +14,7 @@ from ..args_provider import ArgsProvider
 
 class PolicyGradient:
     def __init__(self):
-        '''Initialization for arguments.
+        """Initialization for arguments.
         Accepted arguments:
 
         ``entropy_ratio``: The entropy ratio we put on PolicyGradient
@@ -26,7 +26,7 @@ class PolicyGradient:
         ``ratio_clamp``: importance sampling coefficient clamp
 
         ``policy_action_nodes``: ;separated string that specify policy_action nodes.
-        '''
+        """
         self.args = ArgsProvider(
             call_from = self,
             define_args = [
@@ -40,7 +40,7 @@ class PolicyGradient:
         )
 
     def _init(self, args):
-        '''Initialize policy loss to be an ``nn.NLLLoss`` and parse ``policy_action_nodes``'''
+        """Initialize policy loss to be an ``nn.NLLLoss`` and parse ``policy_action_nodes``"""
         self.policy_loss = nn.NLLLoss().cuda()
         self.policy_action_nodes = []
         for node in args.policy_action_nodes.split(";"):
@@ -48,14 +48,14 @@ class PolicyGradient:
             self.policy_action_nodes.append((policy, action))
 
     def _compute_one_policy_entropy_err(self, pi, a):
-        '''Compute policy error and entropy error for one. Pass in ``args.min_prob`` to avoid ``Nan`` in logrithms.
+        """Compute policy error and entropy error for one. Pass in ``args.min_prob`` to avoid ``Nan`` in logrithms.
 
         Returns:
             dict of
             ``logpi``: log policy
             ``policy_err``: polict error
             ``entropy_err``: entropy error
-        '''
+        """
         batchsize = a.size(0)
 
         # Add normalization constant
@@ -70,14 +70,14 @@ class PolicyGradient:
         return dict(logpi=logpi, policy_err=policy_err, entropy_err=entropy_err)
 
     def _compute_policy_entropy_err(self, pi, a):
-        '''Compute policy error and entropy error for a batch. Pass in ``args.min_prob`` to avoid ``Nan`` in logrithms.
+        """Compute policy error and entropy error for a batch. Pass in ``args.min_prob`` to avoid ``Nan`` in logrithms.
 
         Returns:
             dict of
             ``logpi``: log policy
             ``policy_err``: polict error
             ``entropy_err``: entropy error
-        '''
+        """
         args = self.args
 
         errs = { }
@@ -85,14 +85,14 @@ class PolicyGradient:
             # Action map, and we need compute the error one by one.
             for i, pix in enumerate(pi):
                 for j, pixy in enumerate(pix):
-                    errs = accumulate(errs, self._compute_one_policy_entropy_err(pixy, a[:,i,j], args.min_prob))
+                    errs = accumulate(errs, self._compute_one_policy_entropy_err(pixy, a[:,i,j]))
         else:
             errs = self._compute_one_policy_entropy_err(pi, a)
 
         return errs
 
     def _reg_backward(self, v, pg_weights):
-        ''' Register the backward hook. Clip the gradient if necessary.'''
+        """ Register the backward hook. Clip the gradient if necessary."""
         grad_clip_norm = getattr(self.args, "grad_clip_norm", None)
         def bw_hook(grad_in):
             # this works only on pytorch 0.2.0
@@ -105,7 +105,7 @@ class PolicyGradient:
         v.register_hook(bw_hook)
 
     def feed(self, Q, pi_s, actions,  stats, old_pi_s=dict()):
-        '''
+        """
         One iteration of policy gradient.
 
         pho nabla_w log p_w(a|s) Q + entropy_ratio * nabla H(pi(.|s))
@@ -119,9 +119,9 @@ class PolicyGradient:
         If you specify multiple policies, then all the log prob of these policies are added, and their importance factors are multiplied.
         Feed to stats: policy error and nll error
 
-        '''
+        """
         args = self.args
-        batchsize = Q.size(0)
+        # batchsize = Q.size(0)
 
         # We need to set it beforehand.
         # Note that the samples we collect might be off-policy, so we need

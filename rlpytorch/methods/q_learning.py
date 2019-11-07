@@ -14,11 +14,11 @@ from ..args_provider import ArgsProvider
 
 # Q learning
 class Q_learning:
-    ''' An actor critic model '''
+    """ An actor critic model """
     def __init__(self):
-        ''' Initialization of `DiscountedReward` and `ValueMatcher`.
+        """ Initialization of `DiscountedReward` and `ValueMatcher`.
         Initialize the arguments needed (num_games, batchsize, value_node) and in child_providers.
-        '''
+        """
         self.discounted_reward = DiscountedReward()
         self.q_loss = nn.SmoothL1Loss().cuda()
 
@@ -33,7 +33,7 @@ class Q_learning:
         )
 
     def update(self, mi, batch, stats):
-        ''' Actor critic model update.
+        """ Actor critic model update.
         Feed stats for later summarization.
 
         Args:
@@ -43,7 +43,7 @@ class Q_learning:
                 ``r``: immediate reward,
                 ``terminal``: if game is terminated
             stats(`Stats`): Feed stats for later summarization.
-        '''
+        """
         m = mi["model"]
         args = self.args
         Q_node = args.Q_node
