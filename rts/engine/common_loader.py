@@ -145,10 +145,9 @@ class CommonLoader:
         co, GC, params = self._init_gc()
         args = self.args
 
-        desc = {}
+        desc = {"actor": self._get_actor_spec()}
         # For actor model, no reward needed, we only want to get input and return distribution of actions.
         # sampled action and and value will be filled from the reply.
-        desc["actor"] = self._get_actor_spec()
 
         if not args.actor_only:
             # For training, we want input, action (filled by actor models), value (filled by actor models) and reward.
@@ -173,11 +172,9 @@ class CommonLoader:
 
         co, GC, params = self._init_gc(player_names=[train_name, reference_name])
 
-        desc = {}
+        desc = {"actor0": self._get_actor_spec(), "actor1": self._get_actor_spec()}
         # For actor model, no reward needed, we only want to get input and return distribution of actions.
         # sampled action and and value will be filled from the reply.
-        desc["actor0"] = self._get_actor_spec()
-        desc["actor1"] = self._get_actor_spec()
 
         desc["actor0"]["name"] = reference_name
         desc["actor1"]["name"] = train_name
@@ -206,12 +203,10 @@ class CommonLoader:
         train_name = "train"
         co, GC, params = self._init_gc(player_names=[train_name, reference_name])
 
-        desc = {}
+        desc = {"reduced_project": self._get_reduced_project(), "reduced_forward": self._get_reduced_forward(),
+                "reduced_predict": self._get_reduced_predict()}
         # For actor model, no reward needed, we only want to get input and return distribution of actions.
         # sampled action and and value will be filled from the reply.
-        desc["reduced_project"] = self._get_reduced_project()
-        desc["reduced_forward"] = self._get_reduced_forward()
-        desc["reduced_predict"] = self._get_reduced_predict()
         if params["players"][1]["type"] == "AI_NN":
             desc["actor"] = self._get_actor_spec()
             desc["actor"]["batchsize"] //= 2

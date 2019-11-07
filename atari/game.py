@@ -66,15 +66,13 @@ class Loader:
         params = GC.GetParams()
         print("Num Actions: ", params["num_action"])
 
-        desc = {}
+        desc = {"actor": dict(
+            batchsize=args.batchsize,
+            input=dict(T=1, keys={"s", "last_r", "last_terminal"}),
+            reply=dict(T=1, keys={"rv", "pi", "V", "a"}))}
         # For actor model, No reward needed, we only want to get input
         # and return distribution of actions.
         # sampled action and and value will be filled from the reply.
-
-        desc["actor"] = dict(
-            batchsize=args.batchsize,
-            input=dict(T=1, keys=set(["s", "last_r", "last_terminal"])),
-            reply=dict(T=1, keys=set(["rv", "pi", "V", "a"])))
 
         if not args.actor_only:
             # For training: group 1
@@ -84,10 +82,7 @@ class Loader:
                 batchsize=args.batchsize,
                 input=dict(
                     T=args.T,
-                    keys=set([
-                        "rv", "id", "pi", "s", "a", "last_r", "V", "seq",
-                        "last_terminal"
-                    ])),
+                    keys={"rv", "id", "pi", "s", "a", "last_r", "V", "seq", "last_terminal"}),
                 reply=None)
 
         if args.additional_labels is not None:

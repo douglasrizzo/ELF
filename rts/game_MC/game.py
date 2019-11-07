@@ -49,7 +49,7 @@ class Loader(CommonLoader):
 
         return dict(
             batchsize=self.args.batchsize,
-            input=dict(T=1, keys=set(["s", "last_r", "terminal"])),
+            input=dict(T=1, keys={"s", "last_r", "terminal"}),
             reply=dict(T=1, keys=set(reply_keys + self._unit_action_keys())),
         )
 
@@ -64,8 +64,8 @@ class Loader(CommonLoader):
     def _get_reduced_predict(self):
         return dict(
             batchsize=self.args.batchsize,
-            input=dict(T=1, keys=set(["reduced_s"])),
-            reply=dict(T=1, keys=set(["pi", "V"])),
+            input=dict(T=1, keys={"reduced_s"}),
+            reply=dict(T=1, keys={"pi", "V"}),
             name="reduced_predict",
             timeout_usec=100
         )
@@ -73,8 +73,8 @@ class Loader(CommonLoader):
     def _get_reduced_forward(self):
         return dict(
             batchsize=self.args.batchsize,
-            input=dict(T=1, keys=set(["reduced_s", "a"])),
-            reply=dict(T=1, keys=set(["reduced_next_s"])),
+            input=dict(T=1, keys={"reduced_s", "a"}),
+            reply=dict(T=1, keys={"reduced_next_s"}),
             name="reduced_forward",
             timeout_usec=100
         )
@@ -82,15 +82,14 @@ class Loader(CommonLoader):
     def _get_reduced_project(self):
         return dict(
             batchsize=min(self.args.batchsize, max(self.args.num_games // 2, 1)),
-            input=dict(T=1, keys=set(["s", "last_r"])),
-            reply=dict(T=1, keys=set(["reduced_s"])),
+            input=dict(T=1, keys={"s", "last_r"}),
+            reply=dict(T=1, keys={"reduced_s"}),
             name="reduced_project"
         )
 
 nIter = 5000
 elapsed_wait_only = 0
 
-import pickle
 import argparse
 
 if __name__ == '__main__':
