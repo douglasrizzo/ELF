@@ -9,16 +9,13 @@
 # File: benchmark-atari.py
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-import random
-import time
-from time import sleep
-import numpy as np
 import sys
+import time
+from collections import Counter
 
-from six.moves import range
 import atari_game as atari
 from game_utils import initialize_game
-from collections import Counter
+from six.moves import range
 
 Niter = 30000
 frame_skip = 4

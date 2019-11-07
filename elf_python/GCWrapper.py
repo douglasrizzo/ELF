@@ -4,11 +4,13 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from .assembler import ExpOp, BatchAssembler
-from .replier import Replier
-from .memory_receiver import MemoryReceiver
-from .zmq_adapter import InitConnector
 from queue import Queue
+
+from .assembler import ExpOp, BatchAssembler
+from .memory_receiver import MemoryReceiver
+from .replier import Replier
+from .zmq_adapter import InitConnector
+
 
 class Collector:
     def __init__(self, name, collector_name, batchsize, T, batch_queue):

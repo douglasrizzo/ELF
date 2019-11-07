@@ -6,9 +6,10 @@
 
 import os
 import sys
+
 import torch
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'elf'))
-import utils_elf
 from ..args_provider import ArgsProvider
 from ..stats import Stats
 from .timer import RLTimer

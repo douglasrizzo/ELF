@@ -4,14 +4,11 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import torch
 import torch.nn as nn
-from copy import deepcopy
-from collections import Counter
+from trunk import MiniRTSNet
 
 from rlpytorch import Model, ActorCritic
-from actor_critic_changed import ActorCriticChanged
-from trunk import MiniRTSNet
+
 
 def flattern(x):
     return x.view(x.size(0), -1)

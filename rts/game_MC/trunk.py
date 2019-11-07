@@ -4,10 +4,12 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import torch
-import torch.nn as nn
-from rlpytorch import Model
 from collections import Counter
+
+import torch.nn as nn
+
+from rlpytorch import Model
+
 
 class MiniRTSNet(Model):
     def __init__(self, args, output1d=True):

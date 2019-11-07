@@ -6,12 +6,10 @@
 
 import torch
 import torch.nn as nn
-from copy import deepcopy
-from collections import Counter
-import random
+from trunk import MiniRTSNet
 
 from rlpytorch import Model, RNNActorCritic
-from trunk import MiniRTSNet
+
 
 class Model_RNNActorCritic(Model):
     def __init__(self, args):

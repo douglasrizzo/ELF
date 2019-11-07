@@ -5,7 +5,9 @@
 # LICENSE file in the root directory of this source tree.
 
 from collections import defaultdict, Counter
+
 from .circular_queue import CQueue
+
 
 class ExpOp:
     def __init__(self, excluded_entries=(), hist_entries=None, num_hist=0, use_future=True):

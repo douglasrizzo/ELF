@@ -1,10 +1,9 @@
-import torch
 import torch.nn as nn
 from torch.autograd import Variable
-import math
 
 from rlpytorch import ArgsProvider, add_err
 from rlpytorch.trainer import topk_accuracy
+
 
 class MultiplePrediction:
     def __init__(self):

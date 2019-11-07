@@ -4,10 +4,12 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from ..args_provider import ArgsProvider
+import os
 from collections import defaultdict, deque, Counter
 from datetime import datetime
-import os
+
+from ..args_provider import ArgsProvider
+
 
 class SymLink:
     def __init__(self, sym_prefix, latest_k=5):

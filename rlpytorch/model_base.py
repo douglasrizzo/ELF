@@ -4,12 +4,14 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+from collections import OrderedDict
+from copy import deepcopy
+from time import sleep
+
 import torch
 import torch.nn as nn
-from copy import deepcopy
 from torch.autograd import Variable
-from time import sleep
-from collections import OrderedDict
+
 
 class Model(nn.Module):
     ''' Base class for an RL model, it is a wrapper for ``nn.Module``'''

@@ -4,12 +4,11 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import torch
 import torch.nn as nn
 from torch.autograd import Variable
-import math
 
-from rlpytorch import ArgsProvider, PolicyGradient, DiscountedReward, ValueMatcher, add_err
+from rlpytorch import ArgsProvider, add_err
+
 
 class ForwardPredict:
     def __init__(self):

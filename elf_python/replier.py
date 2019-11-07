@@ -5,9 +5,11 @@
 # LICENSE file in the root directory of this source tree.
 
 import threading
-from queue import Queue
 from collections import defaultdict, OrderedDict
+from queue import Queue
+
 from .utils import queue_get, queue_put
+
 
 class Replier:
     def __init__(self, ch, reply_batchsize=1, done_flag=None):

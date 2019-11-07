@@ -4,9 +4,11 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from ..args_provider import ArgsProvider
-from .parameter_server import SharedData, ParameterServer
 import tqdm
+
+from .parameter_server import SharedData
+from ..args_provider import ArgsProvider
+
 
 class MultiProcessRun:
     def __init__(self):

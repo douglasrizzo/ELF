@@ -4,15 +4,16 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+from copy import deepcopy
+
 import torch
 import torch.nn as nn
-from copy import deepcopy
-from collections import Counter
-
-from rlpytorch import Model, ActorCritic
 from actor_critic_changed import ActorCriticChanged
 from forward_predict import ForwardPredict
 from trunk import MiniRTSNet
+
+from rlpytorch import Model, ActorCritic
+
 
 class Model_ActorCritic(Model):
     def __init__(self, args):

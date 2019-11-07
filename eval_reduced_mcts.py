@@ -7,12 +7,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
-import sys
 import os
 
-from rlpytorch import load_env, Evaluator, ArgsProvider, EvalIters
+from rlpytorch import load_env, Evaluator, EvalIters
 
 if __name__ == '__main__':
     evaluator = Evaluator(stats=False)

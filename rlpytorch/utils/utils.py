@@ -4,20 +4,18 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import numpy as np
-import torch
 import math
 from collections import defaultdict, Counter
 from datetime import datetime
-from queue import Queue, Full, Empty
-from torch.autograd import Variable
+from queue import Full, Empty
+
+import numpy as np
+import torch
 import torch.multiprocessing as _mp
+
 mp = _mp.get_context('spawn')
 
 from .size_utils import total_size
-
-import sys
-import os
 
 import msgpack
 import msgpack_numpy

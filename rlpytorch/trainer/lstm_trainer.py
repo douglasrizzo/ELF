@@ -4,15 +4,16 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+from datetime import datetime
+
 import torch
 from torch.autograd import Variable
 
+from .utils import ModelSaver, MultiCounter
 from ..args_provider import ArgsProvider
 from ..stats import Stats
 from ..utils import HistState
-from .utils import ModelSaver, MultiCounter
 
-from datetime import datetime
 
 class LSTMTrainer:
     def __init__(self, verbose=False):

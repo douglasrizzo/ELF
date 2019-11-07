@@ -9,12 +9,13 @@
 # File: game.py
 
 import argparse
-import atari_game as atari
-from collections import Counter
-from datetime import datetime
 import os
 import random
 import sys
+from collections import Counter
+from datetime import datetime
+
+import atari_game as atari
 
 # elf related import
 sys.path.append('../')

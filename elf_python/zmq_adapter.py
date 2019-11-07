@@ -4,11 +4,11 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+from time import sleep
+
 # -*- coding: utf-8 -*-
-import sys
 import zmq
 
-from time import sleep
 from .utils import loads, dumps, check_done_flag
 
 __all__ = ["InitSender", "InitConnector", "WaitAll", "SendAll"]

@@ -4,12 +4,15 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+import argparse
 import os
 import sys
-import argparse
+
 from .args_provider import ArgsProvider
-from .sampler import Sampler
 from .model_interface import ModelInterface
+from .sampler import Sampler
+
+
 # from .utils.utils import get_total_size
 
 def load_module(mod):

@@ -13,8 +13,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'elf'))
 import utils_elf
 import random
 
-from datetime import datetime
-
 '''
 Usage:
     In process main function, run the following and then you get a shared model.

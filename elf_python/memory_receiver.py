@@ -4,14 +4,13 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from queue import Queue, Full, Empty
 import threading
+from collections import Counter, defaultdict
+from datetime import datetime
+from queue import Queue
+
 import numpy as np
 import torch
-
-from datetime import datetime
-from time import sleep
-from collections import deque, Counter, defaultdict, OrderedDict
 
 from .utils import *
 

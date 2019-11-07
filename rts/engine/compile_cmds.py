@@ -4,11 +4,10 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import os
-import sys
-import re
 import argparse
+import re
 from collections import defaultdict
+
 
 def type_modifier(t):
     return t if t in ["int", "float"] else "const %s&" % t

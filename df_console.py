@@ -5,10 +5,11 @@
 # LICENSE file in the root directory of this source tree.
 
 # Console for DarkForest
-import sys
 import os
 from collections import Counter
-from rlpytorch import load_env, Evaluator, ModelInterface, ArgsProvider, EvalIters
+
+from rlpytorch import load_env, Evaluator, ModelInterface
+
 
 def move2xy(v):
     x = ord(v[0].lower()) - ord('a')

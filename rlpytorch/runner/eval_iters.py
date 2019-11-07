@@ -6,7 +6,7 @@
 
 from ..args_provider import ArgsProvider
 from ..stats import Stats
-import tqdm
+
 
 class EvalIters:
     def __init__(self):

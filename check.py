@@ -4,14 +4,12 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from datetime import datetime
-
-import sys
 import os
 import random
 from collections import defaultdict
 
-from rlpytorch import load_module, SingleProcessRun, ArgsProvider, load_env
+from rlpytorch import SingleProcessRun, load_env
+
 
 class StatsCollector:
     def __init__(self):

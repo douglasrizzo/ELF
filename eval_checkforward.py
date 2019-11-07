@@ -7,17 +7,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import argparse
-from datetime import datetime
-from collections import deque, defaultdict
+import os
+from collections import defaultdict
+
 from torch.autograd import Variable
 
-import sys
-import os
-
 from rlpytorch import *
-from rlpytorch.stats import Stats
 from rlpytorch.utils import HistState
+
 
 def tensor2str(t):
     return ",".join(["%.6f" % ele for ele in t])

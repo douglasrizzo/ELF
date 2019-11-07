@@ -4,13 +4,13 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import minirts
 from datetime import datetime
 
-import sys, os
+import minirts
 
-from rts.engine import CommonLoader
 from rlpytorch import ArgsProvider
+from rts.engine import CommonLoader
+
 
 class Loader(CommonLoader):
     def __init__(self):

@@ -4,10 +4,11 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from queue import Queue, Full, Empty
+from queue import Full, Empty
 
 import msgpack
 import msgpack_numpy
+
 msgpack_numpy.patch()
 
 def dumps(obj):

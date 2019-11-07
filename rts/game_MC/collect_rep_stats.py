@@ -4,15 +4,15 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import os
-import sys
-import shlex
 import glob
-import re
 import json
-import tqdm
 import multiprocessing
-from subprocess import call
+import os
+import re
+import shlex
+import sys
+
+import tqdm
 
 matcher = re.compile(r"\[(\d):(.*?)\] V: ([-\.\d]+), Prob: (.*?)$")
 win_matcher = re.compile("\[(\d+)\] player (\d+):(\d+) won")

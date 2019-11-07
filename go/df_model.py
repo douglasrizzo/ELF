@@ -1,8 +1,8 @@
-from rlpytorch import Model, ActorCritic
+import torch.nn as nn
 from multiple_prediction import MultiplePrediction
 
-import torch
-import torch.nn as nn
+from rlpytorch import Model
+
 
 class Model_Policy(Model):
     def __init__(self, args):

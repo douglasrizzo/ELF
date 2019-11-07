@@ -9,6 +9,7 @@ import torch.nn as nn
 
 from rlpytorch import Model, ActorCritic
 
+
 class MiniRTSNet(Model):
     def __init__(self, args):
         # this is the place where you instantiate all your modules

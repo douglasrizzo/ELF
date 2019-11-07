@@ -4,11 +4,12 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+import abc
 import sys
 
 from elf import GCWrapper, ContextArgs, MoreLabels
 from rlpytorch import ArgsProvider
-import abc
+
 
 class CommonLoader:
     def __init__(self, module):

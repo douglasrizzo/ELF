@@ -7,9 +7,10 @@
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-import math
-from ..args_provider import ArgsProvider
+
 from .utils import *
+from ..args_provider import ArgsProvider
+
 
 class PolicyGradient:
     def __init__(self):

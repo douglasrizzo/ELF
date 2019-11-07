@@ -4,13 +4,14 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+from collections import deque
+
 import torch
 import torch.cuda
 import torch.optim
-import torch.nn as nn
-from torch.autograd import Variable
-from collections import deque
+
 from .args_provider import ArgsProvider
+
 
 # All model must provide .outputs and .preprocess
 # E.g., .outputs = { "Q" : self.final_linear_layer }

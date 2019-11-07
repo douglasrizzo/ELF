@@ -4,17 +4,14 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import torch
-import torch.nn as nn
 from torch.autograd import Variable
-import math
 
+from .discounted_reward import DiscountedReward
+from .policy_gradient import PolicyGradient
+from .utils import add_err
+from .value_matcher import ValueMatcher
 from ..args_provider import ArgsProvider
 
-from .utils import add_err
-from .policy_gradient import PolicyGradient
-from .discounted_reward import DiscountedReward
-from .value_matcher import ValueMatcher
 
 # Actor critic model.
 class RNNActorCritic:

@@ -9,16 +9,16 @@
 # File: benchmark-gym.py
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-import os
-import sys
-import numpy as np
-import time
-import tqdm
-import threading
-import queue
-import gym
 import multiprocessing as mp
+import os
+import queue
+import sys
+import threading
+import time
 
+import gym
+import numpy as np
+import tqdm
 from tensorpack.utils.concurrency import ensure_proc_terminate
 
 ALELOCK = threading.Lock()

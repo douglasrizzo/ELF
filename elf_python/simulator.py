@@ -4,9 +4,12 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from .zmq_adapter import InitSender, WaitAll, SendAll
 import abc
+
 import torch.multiprocessing as _mp
+
+from .zmq_adapter import InitSender, WaitAll, SendAll
+
 mp = _mp.get_context('spawn')
 
 class Simulator(mp.Process):

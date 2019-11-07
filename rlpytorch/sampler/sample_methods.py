@@ -4,9 +4,11 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+import sys
+
 import numpy as np
 import torch
-import sys
+
 
 def uniform_multinomial(batchsize, num_action, use_cuda=True):
     ''' Sample with uniform probability.

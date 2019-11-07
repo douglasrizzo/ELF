@@ -4,11 +4,13 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import torch
-import sys
 import math
-import numpy as np
+import sys
 from collections import defaultdict
+
+import numpy as np
+import torch
+
 
 class Batch:
     ''' A wrapper class for batch data'''

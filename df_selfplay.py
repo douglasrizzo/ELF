@@ -5,9 +5,9 @@
 # LICENSE file in the root directory of this source tree.
 
 # Console for DarkForest
-import sys
 import os
-from rlpytorch import load_env, Evaluator, ModelInterface, ArgsProvider, EvalIters
+
+from rlpytorch import load_env, Evaluator, ModelInterface
 
 if __name__ == '__main__':
     evaluator = Evaluator(stats=False)

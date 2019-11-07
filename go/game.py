@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 # File: game.py
 
-from datetime import datetime
-from collections import Counter
 import argparse
-from time import sleep
 import os
+import sys
+from collections import Counter
+from datetime import datetime
+
 import go_game as go
 
-import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from elf import GCWrapper, ContextArgs, MoreLabels
 from rlpytorch import ArgsProvider

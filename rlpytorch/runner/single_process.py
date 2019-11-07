@@ -4,8 +4,10 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from ..args_provider import ArgsProvider
 import tqdm
+
+from ..args_provider import ArgsProvider
+
 
 class SingleProcessRun:
     def __init__(self):
