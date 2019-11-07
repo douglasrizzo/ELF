@@ -7,10 +7,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import argparse
-from datetime import datetime
-
-import sys
 import os
 
 from rlpytorch import *

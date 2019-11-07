@@ -7,13 +7,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import argparse
-from datetime import datetime
-
-import sys
 import os
 
-from rlpytorch import LSTMTrainer, Sampler, SingleProcessRun, load_env, ModelLoader, ArgsProvider, ModelInterface
+from rlpytorch import LSTMTrainer, SingleProcessRun, load_env, ModelInterface
 
 if __name__ == '__main__':
     trainer = LSTMTrainer()
