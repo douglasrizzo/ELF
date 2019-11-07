@@ -9,11 +9,6 @@ cache:
 
 # C++ project
 language: cpp
-python:
-  - 3.6
-compiler:
-  - gcc
-  - clang
 addons:
   apt:
     sources:
@@ -24,6 +19,13 @@ addons:
     - clang
     - libpython3-dev
     - libtbb-dev
+env:
+  - MINICONDA_PYTHON_VERSION=3.6
+  - MINICONDA_PYTHON_VERSION=3.7
+compiler:
+  - gcc
+  - clang
+
 install:
   # create deps dir if not existing
   - DEPS_DIR=${HOME}/deps
@@ -42,8 +44,9 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n env36 python=3.6
-  - conda create -q -n env37 python=3.7
+  - conda create -q -n test_env python=${MINICONDA_PYTHON_VERSION}
+  - conda activate test_env
+  - set PYTHON_EXECUTABLE=${HOME}/miniconda/bin/python
   - |
     CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
     mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
@@ -52,7 +55,7 @@ install:
 
 script:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
-  - (mkdir rts/build_MC36 && cd rts/build_MC36 && conda activate env36 && cmake .. -DPYTHON_EXECUTABLE=${HOME}/miniconda/bin/python -DGAME_DIR=../game_MC && make)
-  - (mkdir rts/build_MC37 && cd rts/build_MC37 && conda activate env37 && cmake .. -DPYTHON_EXECUTABLE=${HOME}/miniconda/bin/python -DGAME_DIR=../game_MC && make)
+  - find -type f -name '*.py' -exec ${PYTHON_EXECUTABLE} -m py_compile {} +;
+  - (mkdir rts/build_MC && cd rts/build_MC && cmake .. -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DGAME_DIR=../game_MC && make)
 #  - (mkdir rts/build_CF && cd rts/build_CF && cmake .. -DPYTHON_EXECUTABLE=/opt/pyenv/shims/python -DGAME_DIR=../game_CF && make)
 #  - (mkdir rts/build_TD && cd rts/build_TD && cmake .. -DPYTHON_EXECUTABLE=/opt/pyenv/shims/python -DGAME_DIR=../game_TD && make)
