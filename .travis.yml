@@ -11,7 +11,6 @@ cache:
 language: cpp
 python:
   - 3.6
-  - 3.7
 compiler:
   - gcc
   - clang
@@ -30,6 +29,21 @@ install:
   - DEPS_DIR=${HOME}/deps
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - python3-config --cflags --ldflags
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - source "$HOME/miniconda/etc/profile.d/conda.sh"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  # Replace dep1 dep2 ... with your dependencies
+  - conda create -q -n env36 python=3.6
+  - conda create -q -n env37 python=3.7
   - |
     CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
     mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
@@ -38,6 +52,7 @@ install:
 
 script:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
-  - (mkdir rts/build_MC && cd rts/build_MC && cmake .. -DPYTHON_EXECUTABLE=/opt/pyenv/shims/python -DGAME_DIR=../game_MC && make)
+  - (mkdir rts/build_MC36 && cd rts/build_MC36 && conda activate env36 && cmake .. -DPYTHON_EXECUTABLE=${HOME}/miniconda/bin/python -DGAME_DIR=../game_MC && make)
+  - (mkdir rts/build_MC37 && cd rts/build_MC37 && conda activate env37 && cmake .. -DPYTHON_EXECUTABLE=${HOME}/miniconda/bin/python -DGAME_DIR=../game_MC && make)
 #  - (mkdir rts/build_CF && cd rts/build_CF && cmake .. -DPYTHON_EXECUTABLE=/opt/pyenv/shims/python -DGAME_DIR=../game_CF && make)
 #  - (mkdir rts/build_TD && cd rts/build_TD && cmake .. -DPYTHON_EXECUTABLE=/opt/pyenv/shims/python -DGAME_DIR=../game_TD && make)
