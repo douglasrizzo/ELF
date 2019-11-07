@@ -12,11 +12,13 @@ from collections import defaultdict
 def type_modifier(t):
     return t if t in ["int", "float"] else "const %s&" % t
 
+
 def init_modifier(t, n, d):
     ret = type_modifier(t) + " " + n
     if d is not None:
         ret += " = " + d
     return ret
+
 
 def get_class_and_enum_name(s):
     classname = "Cmd" + s
@@ -26,6 +28,7 @@ def get_class_and_enum_name(s):
             enum_name += "_"
         enum_name += s[i + 1].upper()
     return classname, enum_name
+
 
 template = """
 #define $enum_name $idx
@@ -53,6 +56,7 @@ $accessors
 $serializer
 };
 """
+
 
 def read_cmd_def(def_filename, content, classes):
     idx = None
@@ -84,25 +88,32 @@ def read_cmd_def(def_filename, content, classes):
 
         # Check default argument.
         defaults = map(lambda x: x.split("=")[1].strip() if len(x.split("=")) == 2 else None, names)
-        names = [ n.split("=")[0].strip() for n in names ]
+        names = [n.split("=")[0].strip() for n in names]
 
         s_name = "SERIALIZER_DERIVED"
         if len(names) == 0: s_name += "0"
-        serializer = "    " + s_name + "(%s, %s" % (classname, baseclass) + "".join(", _%s" % n for n in names) + ");"
+        serializer = "    " + s_name + "(%s, %s" % (classname, baseclass) + "".join(
+            ", _%s" % n for n in names
+        ) + ");"
 
         # Compute the variable declaration and variable assignments.
         symbols = dict(
-            idx = str(idx),
-            baseclass = baseclass,
-            override_run = override_run,
-            enum_name = enum_name,
-            classname = classname,
-            var_decl = "\n".join("    %s _%s;" % (t, n) for t, n in zip(types, names)) + "\n",
-            var_init_list = "".join(", " + init_modifier(t, n, d) for t, n, d in zip(types, names, defaults)),
-            serializer = serializer,
-            var_initializer = "".join(", _%s(%s)" % (n, n) for n in names),
-            var_ostream = " ".join("<< \" [%s]: \" << _%s" % (n, n) for n in names),
-            accessors = "\n".join("    %s %s() const { return _%s; }" % (type_modifier(t), n, n) for t, n in zip(types, names))
+            idx=str(idx),
+            baseclass=baseclass,
+            override_run=override_run,
+            enum_name=enum_name,
+            classname=classname,
+            var_decl="\n".join("    %s _%s;" % (t, n) for t, n in zip(types, names)) + "\n",
+            var_init_list="".join(
+                ", " + init_modifier(t, n, d) for t, n, d in zip(types, names, defaults)
+            ),
+            serializer=serializer,
+            var_initializer="".join(", _%s(%s)" % (n, n) for n in names),
+            var_ostream=" ".join("<< \" [%s]: \" << _%s" % (n, n) for n in names),
+            accessors="\n".join(
+                "    %s %s() const { return _%s; }" % (type_modifier(t), n, n)
+                for t, n in zip(types, names)
+            )
         )
         text = template
         for k, v in symbols.items():
@@ -110,6 +121,7 @@ def read_cmd_def(def_filename, content, classes):
 
         content.append(text)
         idx += 1
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--def_file", type=str)
@@ -138,4 +150,3 @@ for class_name, info in classes.items():
         output.write("    SERIALIZER_ANCHOR_FUNC(%s, %s);\n" % (baseclass, class_name))
 output.write("}\n")
 output.close()
-

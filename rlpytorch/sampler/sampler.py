@@ -7,7 +7,9 @@
 from .sample_methods import sample_multinomial, epsilon_greedy
 from ..args_provider import ArgsProvider
 
+
 class Sampler:
+
     def __init__(self):
         """ Initialization for Sampler. Accepted arguments:
 
@@ -18,14 +20,27 @@ class Sampler:
         ``sample_nodes``: ;-separated nodes to be sampled and saved
         """
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-                ("sample_policy", dict(type=str, choices=["epsilon-greedy", "multinomial", "uniform"], help="Sample policy", default="epsilon-greedy")),
+            call_from=self,
+            define_args=[
+                (
+                    "sample_policy",
+                    dict(
+                        type=str,
+                        choices=["epsilon-greedy", "multinomial", "uniform"],
+                        help="Sample policy",
+                        default="epsilon-greedy"
+                    )
+                ),
                 ("greedy", dict(action="store_true")),
                 ("epsilon", dict(type=float, help="Used in epsilon-greedy approach", default=0.00)),
-                ("sample_nodes", dict(type=str, help=";-separated nodes to be sampled and saved", default="pi,a")),
+                (
+                    "sample_nodes",
+                    dict(
+                        type=str, help=";-separated nodes to be sampled and saved", default="pi,a"
+                    )
+                ),
             ],
-            on_get_args = self._on_get_args,
+            on_get_args=self._on_get_args,
         )
 
     def _on_get_args(self, _):

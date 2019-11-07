@@ -13,7 +13,9 @@ from .utils import loads, dumps, check_done_flag
 
 __all__ = ["InitSender", "InitConnector", "WaitAll", "SendAll"]
 
+
 class Sender:
+
     def __init__(self, name, sender_name, receiver_name, identity, timeout=10000, switch=None):
         self.name = name
         self.sender_name = sender_name
@@ -113,6 +115,7 @@ class Connector:
             print("ZMQ Error, break the loop ...")
             return None, None
 
+
 def WaitAll(chs):
     replies = {}
     while True:
@@ -129,6 +132,7 @@ def WaitAll(chs):
 
     return replies
 
+
 def SendAll(chs, data):
     sent = set()
     while True:
@@ -142,15 +146,18 @@ def SendAll(chs, data):
 
         sleep(0.005)
 
+
 def _get_conn_vars(name):
     ipc_request_name = "ipc://bc-req-" + name
     ipc_response_name = "ipc://bc-rep-" + name
 
     return ipc_request_name, ipc_response_name
 
+
 def InitSender(name, identity, **kwargs):
     ipc_request_name, ipc_response_name = _get_conn_vars(name)
     return Sender(name, ipc_request_name, ipc_response_name, identity, **kwargs)
+
 
 def InitConnector(name, **kwargs):
     ipc_request_name, ipc_response_name = _get_conn_vars(name)

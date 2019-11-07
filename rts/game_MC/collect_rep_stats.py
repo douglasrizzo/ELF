@@ -18,11 +18,13 @@ matcher = re.compile(r"\[(\d):(.*?)\] V: ([-.\d]+), Prob: (.*?)$")
 win_matcher = re.compile("\[(\d+)\] player (\d+):(\d+) won")
 prev_seen_matcher = re.compile("\[(\d):(.*?)\] PrevSeenCount: (\d+)")
 
+
 def get_comment(line):
     items = shlex.split(line)
     if items[0] != "CmdComment":
         return None
     return items[5]
+
 
 def get_content(f):
     values = []
@@ -41,7 +43,7 @@ def get_content(f):
         if m:
             # player_id = int(m.group(1))
             value = float(m.group(3))
-            policy = [ float(v) for v in m.group(4).split(",") ]
+            policy = [float(v) for v in m.group(4).split(",")]
             values.append(value)
             policies.append(policy)
             continue
@@ -65,6 +67,7 @@ def get_content(f):
                 prev_seen_counts=prev_seen_counts,
                 filename=f
             )
+
 
 filenames = list(glob.glob("*.rep"))
 

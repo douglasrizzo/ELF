@@ -11,15 +11,16 @@ from datetime import datetime
 
 class RLTimer:
     """ A customized timer class"""
+
     def __init__(self):
         self.overall_counts = defaultdict(int)
-        self.last_overall_mark = defaultdict(lambda : -1)
+        self.last_overall_mark = defaultdict(lambda: -1)
         self.Restart()
 
     def Restart(self):
         self.start_time = time.time()
         self.curr_time = datetime.now()
-        self.durations = defaultdict(lambda : dict(duration=0, counter=0))
+        self.durations = defaultdict(lambda: dict(duration=0, counter=0))
 
     def Record(self, name):
         curr_time = datetime.now()
@@ -31,7 +32,10 @@ class RLTimer:
     def Print(self, nstep):
         final_time = time.time()
         total_duration = (final_time - self.start_time) * 1000.0 / nstep
-        s = ", ".join("%s: %.3f ms" % (name, d["duration"] / 1000.0 / d["counter"]) for name, d in self.durations.items())
+        s = ", ".join(
+            "%s: %.3f ms" % (name, d["duration"] / 1000.0 / d["counter"])
+            for name, d in self.durations.items()
+        )
         return "Total: %.3f ms. " % total_duration + s
 
     def PrintInterval(self, name, nstep, callback):

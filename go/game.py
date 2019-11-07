@@ -14,28 +14,55 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from elf import GCWrapper, ContextArgs, MoreLabels
 from rlpytorch import ArgsProvider
 
+
 class Loader:
+
     def __init__(self):
         self.context_args = ContextArgs()
         self.more_labels = MoreLabels()
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-                ("actor_only", dict(action="store_true")),
-                ("list_file", "./train.lst"),
+            call_from=self,
+            define_args=[
+                ("actor_only", dict(action="store_true")), ("list_file", "./train.lst"),
                 ("verbose", dict(action="store_true")),
-                ("data_aug", dict(type=int, default=-1, help="specify data augumentation, 0-7, -1 mean random")),
-                ("ratio_pre_moves", dict(type=float, default=0, help="how many moves to perform in each thread, before we use the data train the model")),
-                ("start_ratio_pre_moves", dict(type=float, default=0.5, help="how many moves to perform in each thread, before we use the first sgf file to train the model")),
-                ("num_games_per_thread", dict(type=int, default=5, help="number of concurrent games per threads, used to increase diversity of games")),
-                ("move_cutoff", dict(type=int, default=-1, help="Cutoff ply in replay")),
-                ("mode", "online"),
-                ("use_mcts", dict(action="store_true")),
+                (
+                    "data_aug",
+                    dict(
+                        type=int,
+                        default=-1,
+                        help="specify data augumentation, 0-7, -1 mean random"
+                    )
+                ),
+                (
+                    "ratio_pre_moves",
+                    dict(
+                        type=float,
+                        default=0,
+                        help="how many moves to perform in each thread, before we use the data train the model"
+                    )
+                ),
+                (
+                    "start_ratio_pre_moves",
+                    dict(
+                        type=float,
+                        default=0.5,
+                        help="how many moves to perform in each thread, before we use the first sgf file to train the model"
+                    )
+                ),
+                (
+                    "num_games_per_thread",
+                    dict(
+                        type=int,
+                        default=5,
+                        help="number of concurrent games per threads, used to increase diversity of games"
+                    )
+                ), ("move_cutoff", dict(type=int, default=-1, help="Cutoff ply in replay")),
+                ("mode", "online"), ("use_mcts", dict(action="store_true")),
                 ("gpu", dict(type=int, default=None))
             ],
-            more_args = ["batchsize", "T"],
-            child_providers = [ self.context_args.args, self.more_labels.args ]
+            more_args=["batchsize", "T"],
+            child_providers=[self.context_args.args, self.more_labels.args]
         )
 
     def initialize(self):
@@ -83,7 +110,7 @@ class Loader:
                 input=dict(T=1, keys=set(["s"])),
                 reply=dict(T=1, keys=set(["pi", "V"])),
                 name="actor",
-                timeout_usec = 10,
+                timeout_usec=10,
             )
         else:
             desc["train"] = dict(
@@ -95,11 +122,12 @@ class Loader:
         self.more_labels.add_labels(desc)
 
         params.update(dict(
-            num_group = 1 if args.actor_only else 2,
-            T = args.T,
+            num_group=1 if args.actor_only else 2,
+            T=args.T,
         ))
 
         return GCWrapper(GC, co, desc, gpu=args.gpu, use_numpy=False, params=params)
+
 
 elapsed_wait_only = 0
 
@@ -108,7 +136,9 @@ if __name__ == '__main__':
     parser.add_argument("--num_iter", type=int, default=5000)
 
     loader = Loader()
-    args = ArgsProvider.Load(parser, [loader], global_overrides=dict(additional_labels="move_idx,game_record_idx"))
+    args = ArgsProvider.Load(
+        parser, [loader], global_overrides=dict(additional_labels="move_idx,game_record_idx")
+    )
 
     GC = loader.initialize()
 
@@ -127,7 +157,7 @@ if __name__ == '__main__':
         # Collect statistics.
         b = batch.hist(0)
         for game_idx, move_idx, s in zip(b["game_record_idx"], b["move_idx"], b["s"]):
-            bin_idx =  move_idx // 10
+            bin_idx = move_idx // 10
             if bin_idx >= nbin: continue
             game_records_visited[game_idx] += 1
             stats[bin_idx, :, :] += s[our_idx, :, :]
@@ -170,5 +200,11 @@ if __name__ == '__main__':
     fps_loop = 1000 / per_frame_loop_n_cpu * args.frame_skip
     fps_wait = 1000 / per_frame_wait_n_cpu * args.frame_skip
 
-    print("Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" % (per_loop, per_frame_loop_n_cpu, fps_loop))
-    print("Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" % (per_wait, per_frame_wait_n_cpu, fps_wait))
+    print(
+        "Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" %
+        (per_loop, per_frame_loop_n_cpu, fps_loop)
+    )
+    print(
+        "Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" %
+        (per_wait, per_frame_wait_n_cpu, fps_wait)
+    )

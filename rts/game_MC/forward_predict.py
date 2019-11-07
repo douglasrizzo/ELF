@@ -11,15 +11,16 @@ from rlpytorch import ArgsProvider, add_err
 
 
 class ForwardPredict:
+
     def __init__(self):
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("fixed_policy", dict(action="store_true")),
                 ("h_smooth", dict(action="store_true")),
             ],
-            more_args = ["num_games", "batchsize", "min_prob"],
-            child_providers = [ ],
+            more_args=["num_games", "batchsize", "min_prob"],
+            child_providers=[],
         )
 
         self.prediction_loss = nn.SmoothL1Loss().cuda()
@@ -56,5 +57,3 @@ class ForwardPredict:
 
         stats["predict_err"].feed(total_predict_err.data[0])
         total_predict_err.backward()
-
-

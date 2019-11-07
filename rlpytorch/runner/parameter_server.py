@@ -12,7 +12,6 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'elf'))
 import utils_elf
 import random
-
 '''
 Usage:
     In process main function, run the following and then you get a shared model.
@@ -26,8 +25,10 @@ Usage:
 
 '''
 
+
 class Cond:
     """ Wrapper for `Condition` class from torch multiprocessing"""
+
     def __init__(self):
         self.cond = mp.Condition()
 
@@ -46,8 +47,10 @@ class Cond:
         self.cond.notify()
         self.cond.release()
 
+
 class ParameterServer(object):
     """ ParameterServer to handle updates in the model concurrently """
+
     def __init__(self, n_processes):
         """ Initialization.
 
@@ -74,7 +77,7 @@ class ParameterServer(object):
             mi(`ModelInterface`): model interface to send
         """
         assert mi is not None
-        for i in range(self.n_processes-1):
+        for i in range(self.n_processes - 1):
             self.queue.put(mi)
         self._server_shared_mi = mi
 
@@ -141,11 +144,18 @@ class ParameterServer(object):
         self.recv_done.notify()
         return mi
 
+
 class SharedData:
-    def __init__(self, total_process, mi, batch_template,
-                 cb_remote_initialize=None,
-                 cb_remote_batch_process=None,
-                 args=None):
+
+    def __init__(
+        self,
+        total_process,
+        mi,
+        batch_template,
+        cb_remote_initialize=None,
+        cb_remote_batch_process=None,
+        args=None
+    ):
         """ Initialize `SharedData` class with a few hooks
 
         Args:
@@ -162,7 +172,8 @@ class SharedData:
         self.args = args
 
         #def get_gpu_id(i): return i + 1
-        def get_gpu_id(i): return 0
+        def get_gpu_id(i):
+            return 0
 
         # Share only training batches.
         shared_batches = []
@@ -184,8 +195,12 @@ class SharedData:
         self.qs = qs
         self.b = mp.Barrier(total_process)
 
-        self.optimizers = [mp.Process(target=self.process_main, args=(i, get_gpu_id(i))) for i in range(total_process - 1)]
-        for optimizer in self.optimizers: optimizer.start()
+        self.optimizers = [
+            mp.Process(target=self.process_main, args=(i, get_gpu_id(i)))
+            for i in range(total_process - 1)
+        ]
+        for optimizer in self.optimizers:
+            optimizer.start()
 
         # Wait until all models have received the shared memory.
         self.b.wait()

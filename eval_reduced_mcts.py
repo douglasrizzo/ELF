@@ -14,7 +14,9 @@ from rlpytorch import load_env, Evaluator, EvalIters
 if __name__ == '__main__':
     evaluator = Evaluator(stats=False)
     eval_iters = EvalIters()
-    env, args = load_env(os.environ, overrides=dict(actor_only=True), eval_iters=eval_iters, evaluator=evaluator)
+    env, args = load_env(
+        os.environ, overrides=dict(actor_only=True), eval_iters=eval_iters, evaluator=evaluator
+    )
 
     GC = env["game"].initialize_reduced_service()
 
@@ -54,4 +56,3 @@ if __name__ == '__main__':
     for _ in eval_iters.iters():
         GC.Run()
     GC.Stop()
-

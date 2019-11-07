@@ -16,13 +16,15 @@ from rlpytorch import Model, ActorCritic
 
 
 class Model_ActorCritic(Model):
+
     def __init__(self, args):
         super(Model_ActorCritic, self).__init__(args)
         self._init(args)
 
     def _init(self, args):
         params = args.params
-        assert isinstance(params["num_action"], int), "num_action has to be a number. action = " + str(params["num_action"])
+        assert isinstance(params["num_action"], int
+                          ), "num_action has to be a number. action = " + str(params["num_action"])
         self.params = params
         self.net = MiniRTSNet(args)
         last_num_channel = self.net.num_channels[-1]
@@ -94,6 +96,7 @@ class Model_ActorCritic(Model):
         self.Wt.reset_parameters()
         self.Wt2.reset_parameters()
         self.Wt3.reset_parameters()
+
 
 # Format: key, [model, method]
 # if method is None, fall back to default mapping from key to method

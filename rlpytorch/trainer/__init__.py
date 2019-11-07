@@ -7,4 +7,3 @@
 from .lstm_trainer import LSTMTrainer
 from .trainer import Trainer, Evaluator
 from .utils import ModelSaver, MultiCounter, topk_accuracy
-

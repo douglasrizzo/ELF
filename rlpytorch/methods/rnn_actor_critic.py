@@ -15,17 +15,17 @@ from ..args_provider import ArgsProvider
 
 # Actor critic model.
 class RNNActorCritic:
+
     def __init__(self):
         self.pg = PolicyGradient()
         self.discounted_reward = DiscountedReward()
         self.value_matcher = ValueMatcher()
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-            ],
-            more_args = ["num_games", "batchsize", "value_node"],
-            child_providers = [ self.pg.args, self.discounted_reward.args, self.value_matcher.args ],
+            call_from=self,
+            define_args=[],
+            more_args=["num_games", "batchsize", "value_node"],
+            child_providers=[self.pg.args, self.discounted_reward.args, self.value_matcher.args],
         )
 
     def update(self, mi, batch, hiddens, stats):
@@ -36,8 +36,8 @@ class RNNActorCritic:
         T = batch["a"].size(0)
 
         h = Variable(hiddens)
-        hs = [ ]
-        ss = [ ]
+        hs = []
+        ss = []
 
         # Forward to compute LSTM.
         for t in range(0, T - 1):
@@ -64,12 +64,11 @@ class RNNActorCritic:
             V = state_curr[value_node].squeeze()
 
             R = self.discounted_reward.feed(
-                dict(r=batch["r"][t], terminal=batch["terminal"][t]),
-                stats)
+                dict(r=batch["r"][t], terminal=batch["terminal"][t]), stats
+            )
 
             err = add_err(err, self.pg.feed(R - V.data, state_curr, bht, stats, old_pi_s=bht))
-            err = add_err(err, self.value_matcher.feed({ value_node : V, "target" : R }, stats))
+            err = add_err(err, self.value_matcher.feed({value_node: V, "target": R}, stats))
 
-        stats["cost"].feed(err.data[0] / (T-1))
+        stats["cost"].feed(err.data[0] / (T - 1))
         err.backward()
-

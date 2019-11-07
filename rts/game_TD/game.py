@@ -13,6 +13,7 @@ from rts.engine import CommonLoader
 
 
 class Loader(CommonLoader):
+
     def __init__(self):
         super(Loader, self).__init__(minirts)
 
@@ -26,9 +27,13 @@ class Loader(CommonLoader):
     def _get_train_spec(self):
         return dict(
             batchsize=self.args.batchsize,
-            input=dict(T=self.args.T, keys={"rv", "pi", "s", "base_hp_level", "a", "last_r", "V", "terminal"}),
+            input=dict(
+                T=self.args.T,
+                keys={"rv", "pi", "s", "base_hp_level", "a", "last_r", "V", "terminal"}
+            ),
             reply=None
         )
+
 
 nIter = 5000
 elapsed_wait_only = 0
@@ -47,7 +52,7 @@ if __name__ == '__main__':
         pdb.set_trace()
         pickle.dump(utils_elf.to_numpy(sel), open("tmp%d.bin" % k, "wb"), protocol=2)
         """
-        return dict(a=[0]*batch["s"].size(1))
+        return dict(a=[0] * batch["s"].size(1))
 
     GC = loader.initialize()
     GC.reg_callback("actor", actor)
@@ -76,5 +81,11 @@ if __name__ == '__main__':
     fps_loop = 1000 / per_frame_loop_n_cpu * args.frame_skip
     fps_wait = 1000 / per_frame_wait_n_cpu * args.frame_skip
 
-    print("Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" % (per_loop, per_frame_loop_n_cpu, fps_loop))
-    print("Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" % (per_wait, per_frame_wait_n_cpu, fps_wait))
+    print(
+        "Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" %
+        (per_loop, per_frame_loop_n_cpu, fps_loop)
+    )
+    print(
+        "Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" %
+        (per_wait, per_frame_wait_n_cpu, fps_wait)
+    )

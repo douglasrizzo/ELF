@@ -12,13 +12,15 @@ from copy import deepcopy
 def recursive_map(x, f):
     """ Act a function ``f`` on ``x``. Recursively act on its items if ``x`` is a dict or list"""
     if isinstance(x, dict):
-        return { k : recursive_map(v, f) for k, v in x.items() }
+        return {k: recursive_map(v, f) for k, v in x.items()}
     elif isinstance(x, list):
-        return [ recursive_map(v, f) for v in x ]
+        return [recursive_map(v, f) for v in x]
     else:
         return f(x)
 
+
 class Args:
+
     def __init__(self, args_parsed, args_options):
         for key, value in args_parsed.__dict__.items():
             setattr(self, key, value)
@@ -45,13 +47,17 @@ class Args:
 
     def print_info(self):
         """ Print args """
+
         def stringify(x):
             if isinstance(x, str): return "\"" + x + "\""
             else: return str(x)
 
         print("========== Args ============")
         for group_name, options in self._args_options:
-            print(group_name + ": " + ",".join(["%s=%s" % (k, stringify(self[k])) for k, v in options]))
+            print(
+                group_name + ": " +
+                ",".join(["%s=%s" % (k, stringify(self[k])) for k, v in options])
+            )
 
         print("========== End of Args ============")
 
@@ -66,7 +72,16 @@ class Args:
 
 
 class ArgsProvider:
-    def __init__(self, define_args=[], more_args=[], on_get_args=None, call_from=None, child_providers=[], child_transforms=None):
+
+    def __init__(
+        self,
+        define_args=[],
+        more_args=[],
+        on_get_args=None,
+        call_from=None,
+        child_providers=[],
+        child_transforms=None
+    ):
         """Define arguments to be loaded from the command line. Example usage
         ::
             args = ArgsProvider(
@@ -101,7 +116,7 @@ class ArgsProvider:
             else:
                 return options
 
-        self._define_args = [ (k, make_regular(v)) for k, v in define_args ]
+        self._define_args = [(k, make_regular(v)) for k, v in define_args]
         self._more_args = more_args
         self._on_get_args = on_get_args
         if len(self._define_args) == 0:
@@ -109,18 +124,19 @@ class ArgsProvider:
         else:
             self._arg_keys = list(list(zip(*self._define_args))[0])
         self._child_providers = child_providers
-        self._child_transforms = child_transforms if child_transforms is not None else [None] * len(child_providers)
+        self._child_transforms = child_transforms if child_transforms is not None else [
+            None
+        ] * len(child_providers)
         self._call_from = call_from
 
     def get_define_keys(self):
         """ return all keys in _define_args in a list """
-        return [ k for k, _ in self._define_args ]
-
+        return [k for k, _ in self._define_args]
 
     # The following are called in ArgsPrivider.Load:
     def _collect(self, args_list):
         group_name = type(self._call_from).__name__ if self._call_from is not None else "Options"
-        args_list += [ (group_name, self._define_args) ]
+        args_list += [(group_name, self._define_args)]
 
         for child_provider in self._child_providers:
             child_provider._collect(args_list)
@@ -144,7 +160,10 @@ class ArgsProvider:
                     if key.startswith(prefix) and key[len(prefix):] in os.environ:
                         setattr(self, key, os.environ[key[len(prefix):]])
                     else:
-                        print("Warning: key = %s cannot be found from either args or environment!" % key)
+                        print(
+                            "Warning: key = %s cannot be found from either args or environment!" %
+                            key
+                        )
 
         # Finally set commandline.
         if "command_line" in args:
@@ -187,7 +206,13 @@ class ArgsProvider:
                 args[k] = v
 
     @staticmethod
-    def Load(parser, args_providers, cmd_line=sys.argv[1:], global_defaults=dict(), global_overrides=dict()):
+    def Load(
+        parser,
+        args_providers,
+        cmd_line=sys.argv[1:],
+        global_defaults=dict(),
+        global_overrides=dict()
+    ):
         """Load args from ``cmd_line``
 
         Parameters:
@@ -201,7 +226,7 @@ class ArgsProvider:
         args_providers = recursive_map(args_providers, ArgsProvider._GetProvider)
 
         args_list = []
-        recursive_map(args_providers, lambda provider : provider._collect(args_list))
+        recursive_map(args_providers, lambda provider: provider._collect(args_list))
         ArgsProvider._ApplyDefaults(global_defaults, args_list)
 
         ArgsProvider._SendArgsToParser(parser, args_list)
@@ -212,5 +237,5 @@ class ArgsProvider:
 
         print("PID: " + str(os.getpid()))
         args.print_info()
-        recursive_map(args_providers, lambda provider : provider._set(args))
+        recursive_map(args_providers, lambda provider: provider._set(args))
         return args

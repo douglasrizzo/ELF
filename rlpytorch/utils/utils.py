@@ -21,16 +21,20 @@ import msgpack
 import msgpack_numpy
 msgpack_numpy.patch()
 
+
 def dumps(obj):
     return msgpack.dumps(obj, use_bin_type=True)
 
+
 def loads(buf):
     return msgpack.loads(buf)
+
 
 def npimg_convert(img):
     img = img.astype('float32') / 255.0
     img = np.transpose(img, (2, 0, 1))
     return img
+
 
 def check_done_flag(done_flag):
     if done_flag is not None:
@@ -38,9 +42,11 @@ def check_done_flag(done_flag):
             return done_flag.value
     return False
 
+
 def islambda(v):
-    LAMBDA = lambda:0
+    LAMBDA = lambda: 0
     return isinstance(v, type(LAMBDA)) and v.__name__ == LAMBDA.__name__
+
 
 def queue_get(q, done_flag=None, fail_comment=None):
     if done_flag is None:
@@ -56,6 +62,7 @@ def queue_get(q, done_flag=None, fail_comment=None):
                 done = True
     # Return
     return None
+
 
 def queue_put(q, item, done_flag=None, fail_comment=None):
     if done_flag is None:
@@ -73,7 +80,9 @@ def queue_put(q, item, done_flag=None, fail_comment=None):
                 done = True
     return False
 
+
 class Switch:
+
     def __init__(self, val=True):
         self.val = mp.Value("b", val)
         self.lock = mp.Lock()
@@ -86,7 +95,9 @@ class Switch:
         with self.lock:
             self.val.value = v
 
+
 class Timer:
+
     def __init__(self):
         self.reset()
 
@@ -112,11 +123,12 @@ class Timer:
         return rets
 
     def reset(self):
-        self.records = defaultdict(lambda : [0, 0])
-        self.before = { }
+        self.records = defaultdict(lambda: [0, 0])
+        self.before = {}
 
 
 class CategoryCounter:
+
     def __init__(self, name=None):
         self.name = name
         self.reset()
@@ -132,11 +144,15 @@ class CategoryCounter:
         n = sum(self.counter.values())
         prompt = "[%s] n = %d " % (info, n)
         if n > 0:
-            return prompt + "\n" + "\n".join([ "  \"%s\": %d (%.2lf%%)" % (k, v, 100.0 * v / n) for k, v in self.counter.items() ])
+            return prompt + "\n" + "\n".join(
+                ["  \"%s\": %d (%.2lf%%)" % (k, v, 100.0 * v / n) for k, v in self.counter.items()]
+            )
         else:
             return prompt
 
+
 class DelayedStats:
+
     def __init__(self, prefix, max_delay=5):
         """ self.entries[key][t] gives the value of key at time t """
         self.prefix = prefix
@@ -146,8 +162,8 @@ class DelayedStats:
     def reset(self):
         # self.entries[key][t_id] -> value
         self.entries = defaultdict(dict)
-        self.predicted_entries = [ defaultdict(dict) for i in range(self.max_delay) ]
-        self.baseline_entries = [ defaultdict(dict) for i in range(self.max_delay) ]
+        self.predicted_entries = [defaultdict(dict) for i in range(self.max_delay)]
+        self.baseline_entries = [defaultdict(dict) for i in range(self.max_delay)]
 
     def feed(self, ts, ids, curr, pred_diff, curr_cb=None, diff_cb=None):
         """ Check keys in curr and pred, if there is any key starts with 'fa_',
@@ -160,13 +176,18 @@ class DelayedStats:
 
             key = k[len(self.prefix):]
             history = self.entries[key]
-            history.update({ str(t) + "_" + str(d) : (v[i] if not curr_cb else curr_cb(v[i])) for i, (t, d) in enumerate(zip(ts, ids)) })
+            history.update(
+                {
+                    str(t) + "_" + str(d): (v[i] if not curr_cb else curr_cb(v[i]))
+                    for i, (t, d) in enumerate(zip(ts, ids))
+                }
+            )
 
         for k, v in pred_diff.items():
             if not k.startswith(self.prefix): continue
             key = k[len(self.prefix):]
             idx = key.rfind("_")
-            delay = int(key[idx+2:])
+            delay = int(key[idx + 2:])
             if delay >= self.max_delay: continue
 
             key = key[:idx]
@@ -177,7 +198,12 @@ class DelayedStats:
                     for i, (t, d) in enumerate(zip(ts, ids)) })
 
             history2 = self.baseline_entries[delay][key]
-            history2.update({ str(t + delay) + "_" + str(d) : self.entries[key][str(t) + "_" + str(d)] for t, d in zip(ts, ids) })
+            history2.update(
+                {
+                    str(t + delay) + "_" + str(d): self.entries[key][str(t) + "_" + str(d)]
+                    for t, d in zip(ts, ids)
+                }
+            )
 
     def _compare_history(self, h1, h2):
         summation = 0
@@ -186,7 +212,7 @@ class DelayedStats:
         for t_id, v1 in h1.items():
             if not (t_id in h2): continue
             v2 = h2[t_id]
-            summation += (v1 - v2) ** 2
+            summation += (v1 - v2)**2
             counter += 1
         return summation / (counter + 1e-8), counter
 
@@ -196,7 +222,11 @@ class DelayedStats:
                 # Difference
                 avgMSE, counter = self._compare_history(self.predicted_entries[i][k], v)
                 avgMSE_bl, counter = self._compare_history(self.baseline_entries[i][k], v)
-                print("[%s][%s_T%d] RMS: %.4lf, Baseline: %.4lf [cnt=%d]" % (info, k, i, math.sqrt(avgMSE), math.sqrt(avgMSE_bl), counter))
+                print(
+                    "[%s][%s_T%d] RMS: %.4lf, Baseline: %.4lf [cnt=%d]" %
+                    (info, k, i, math.sqrt(avgMSE), math.sqrt(avgMSE_bl), counter)
+                )
+
 
 def print_dict(prompt, d, func=str, tight=False):
     dem = ", " if tight else "\n"
@@ -204,6 +234,7 @@ def print_dict(prompt, d, func=str, tight=False):
     if not tight: print("")
     print(dem.join(["%s: %s" % (k, func(d[k])) for k in sorted(d.keys())]))
     if not tight: print("")
+
 
 def print_dict2(prompt, d1, d2, func=lambda x, y: str(x) + "_" + str(y)):
     print(prompt)
@@ -217,11 +248,19 @@ def print_dict2(prompt, d1, d2, func=lambda x, y: str(x) + "_" + str(y)):
     print("\n".join(items))
     print("")
 
+
 def is_viskey(k):
     return k.startswith("_") or k.startswith("fa_")
 
+
 def get_avg_str(l):
-    return ", ".join([ "[%d]: %.2lf [cnt=%d]" % (i, math.sqrt(v / (c + 1e-10)), c) for i, (v, c) in enumerate(zip(l[::2], l[1::2]))])
+    return ", ".join(
+        [
+            "[%d]: %.2lf [cnt=%d]" % (i, math.sqrt(v / (c + 1e-10)), c)
+            for i, (v, c) in enumerate(zip(l[::2], l[1::2]))
+        ]
+    )
+
 
 def get_avg_str2(l, l_bl):
     items = []
@@ -231,35 +270,41 @@ def get_avg_str2(l, l_bl):
         items.append("[%d]: %.2lf=%.2lf/%.2lf(%d)" % (i, r1 / (r2 + 1e-10), r1, r2, c1))
     return ", ".join(items)
 
+
 class ForwardTracker:
+
     def __init__(self, max_delay=6):
         # prediction[key][t] -> value
         self.max_delay = max_delay
-        self.sum_sqr_err = defaultdict(lambda : [0] * (2 * self.max_delay))
-        self.sum_sqr_err_bl = defaultdict(lambda : [0] * (2 * self.max_delay))
+        self.sum_sqr_err = defaultdict(lambda: [0] * (2 * self.max_delay))
+        self.sum_sqr_err_bl = defaultdict(lambda: [0] * (2 * self.max_delay))
         self.reset()
 
     def reset(self):
         self.prediction = defaultdict(
-            lambda : defaultdict(lambda : {
-                    "pred" : [0] * self.max_delay,
-                    "baseline" : [0] * self.max_delay
-                })
+            lambda:
+            defaultdict(lambda: {
+                "pred": [0] * self.max_delay,
+                "baseline": [0] * self.max_delay
+            })
         )
 
     def feed(self, batch_states, curr_batch, forwarded):
         # Dump all entries with _, and with fa_
         if curr_batch is None and forwarded is None:
-            state_info = { k : v for k, v in batch_states[0].items() if is_viskey(k) }
+            state_info = {k: v for k, v in batch_states[0].items() if is_viskey(k)}
             print_dict("[batch states]: ", state_info, tight=True)
             return
 
-        batch_info = { k : v if isinstance(v, (int, float, str)) else v[0] for k, v in curr_batch.items() if is_viskey(k) }
-        fd_info = { k : v.data[0] for k, v in forwarded.items() if is_viskey(k) }
+        batch_info = {
+            k: v if isinstance(v, (int, float, str)) else v[0]
+            for k, v in curr_batch.items() if is_viskey(k)
+        }
+        fd_info = {k: v.data[0] for k, v in forwarded.items() if is_viskey(k)}
 
         t0 = batch_info["_seq"]
-        additional_info = { }
-        used_fd_info = defaultdict(lambda : [0] * self.max_delay)
+        additional_info = {}
+        used_fd_info = defaultdict(lambda: [0] * self.max_delay)
 
         for k, v in batch_info.items():
             pred = self.prediction[k]
@@ -268,15 +313,22 @@ class ForwardTracker:
                 cp = pred[t0]
                 # Also compute th error.
                 for delay, p in enumerate(cp["pred"]):
-                    self.sum_sqr_err[k][2*delay] += (p - v) ** 2
-                    self.sum_sqr_err[k][2*delay + 1] += 1
+                    self.sum_sqr_err[k][2 * delay] += (p - v)**2
+                    self.sum_sqr_err[k][2 * delay + 1] += 1
 
                 for delay, p in enumerate(cp["baseline"]):
-                    self.sum_sqr_err_bl[k][2*delay] += (p - v) ** 2
-                    self.sum_sqr_err_bl[k][2*delay + 1] += 1
+                    self.sum_sqr_err_bl[k][2 * delay] += (p - v)**2
+                    self.sum_sqr_err_bl[k][2 * delay + 1] += 1
 
-                additional_info[k + "_pred"] = ", ".join(["[%d] %.2f" % (delay, p) for delay, p in enumerate(cp["pred"]) if delay != 0])
-                additional_info[k + "_bl"] = ", ".join(["[%d] %.2f" % (delay, p) for delay, p in enumerate(cp["baseline"]) if delay != 0])
+                additional_info[k + "_pred"] = ", ".join(
+                    ["[%d] %.2f" % (delay, p) for delay, p in enumerate(cp["pred"]) if delay != 0]
+                )
+                additional_info[k + "_bl"] = ", ".join(
+                    [
+                        "[%d] %.2f" % (delay, p) for delay, p in enumerate(cp["baseline"])
+                        if delay != 0
+                    ]
+                )
                 del pred[t0]
 
             for t in range(1, self.max_delay):
@@ -288,7 +340,10 @@ class ForwardTracker:
                 used_fd_info[k][t] = fd_info[k_f]
 
         batch_info.update(additional_info)
-        used_fd_info = { k : ", ".join(["[%d] %.2f" % (i, vv) for i, vv in enumerate(v) if i != 0]) for k, v in used_fd_info.items() }
+        used_fd_info = {
+            k: ", ".join(["[%d] %.2f" % (i, vv) for i, vv in enumerate(v) if i != 0])
+            for k, v in used_fd_info.items()
+        }
 
         #print("--------------")
         #print_dict2("[statistics]:", self.sum_sqr_err, self.sum_sqr_err_bl, func=get_avg_str2)
@@ -296,8 +351,8 @@ class ForwardTracker:
         #print_dict("[state_curr after forward]: ", used_fd_info)
 
 
-
 class SeqStats:
+
     def __init__(self, name="seq", seq_limits=None):
         # Stats.
         self.stats_seq = Counter()
@@ -305,7 +360,11 @@ class SeqStats:
         self.name = name
 
         if seq_limits is None:
-            self.limits = [1, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000, 2500, 3000, 4000, 5000, float("inf")]
+            self.limits = [
+                1, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000,
+                2500, 3000, 4000, 5000,
+                float("inf")
+            ]
         else:
             self.limits = seq_limits
             if not np.isinf(self.limits[-1]):
@@ -329,10 +388,15 @@ class SeqStats:
     def print_stats(self, reset=False):
         total_counts = sum(self.stats_seq.values())
         if total_counts > 0:
-            print("Distribution of %s [min = %d / max = %d / #count = %d]:" % (self.name, self.min_seq, self.max_seq, total_counts))
+            print(
+                "Distribution of %s [min = %d / max = %d / #count = %d]:" %
+                (self.name, self.min_seq, self.max_seq, total_counts)
+            )
             s = ""
-            for r in sorted(self.stats_seq.keys(), key=lambda x : float(x.split(",")[0][1:])):
-                s += "%s: %d [%.2lf%%]\n" % (r, self.stats_seq[r], 100.0 * self.stats_seq[r] / total_counts)
+            for r in sorted(self.stats_seq.keys(), key=lambda x: float(x.split(",")[0][1:])):
+                s += "%s: %d [%.2lf%%]\n" % (
+                    r, self.stats_seq[r], 100.0 * self.stats_seq[r] / total_counts
+                )
             print(s)
         else:
             print("Distribution of %s [#count = %d]:" % (self.name, total_counts))
@@ -344,11 +408,14 @@ class SeqStats:
         self.max_seq = 0
         self.min_seq = float('inf')
 
+
 def agent2sender(agent_name):
     return agent_name[:-5].encode('ascii')
 
+
 def sender2agent(sender, i):
     return sender + "-%04d" % i
+
 
 '''
 def npimgs2cudatensor(imgs):
@@ -359,6 +426,7 @@ def npimgs2cudatensor(imgs):
     return imgs
 '''
 
+
 def print_binary(m):
     # Print a binary matrix.
     if len(m.size()) != 2:
@@ -367,7 +435,7 @@ def print_binary(m):
     s = ""
     for i in range(m.size(0)):
         for j in range(m.size(2)):
-            if m[i,j] != 0:
+            if m[i, j] != 0:
                 s += "x"
             else:
                 s += "."
@@ -376,15 +444,22 @@ def print_binary(m):
 
 
 def get_total_size(o):
+
     def get_tensor_size(t):
         return t.numel() * t.element_size()
 
     tensor_objects = [
-        torch.ByteTensor, torch.FloatTensor, torch.DoubleTensor, torch.IntTensor, torch.LongTensor,
-        torch.cuda.ByteTensor, torch.cuda.FloatTensor, torch.cuda.DoubleTensor, torch.cuda.IntTensor, torch.cuda.LongTensor,
+        torch.ByteTensor,
+        torch.FloatTensor,
+        torch.DoubleTensor,
+        torch.IntTensor,
+        torch.LongTensor,
+        torch.cuda.ByteTensor,
+        torch.cuda.FloatTensor,
+        torch.cuda.DoubleTensor,
+        torch.cuda.IntTensor,
+        torch.cuda.LongTensor,
     ]
 
-    obj_handlers = { obj : get_tensor_size for obj in tensor_objects }
+    obj_handlers = {obj: get_tensor_size for obj in tensor_objects}
     return total_size(o, obj_handlers=obj_handlers)
-
-

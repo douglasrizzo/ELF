@@ -10,6 +10,7 @@ from .circular_queue import CQueue
 
 
 class ExpOp:
+
     def __init__(self, excluded_entries=(), hist_entries=None, num_hist=0, use_future=True):
         # For each agent, we have the following memory layout:
         # agent: hhhhh bbbbbbbbbbbb ffff
@@ -39,11 +40,14 @@ class ExpOp:
         # Do we want to extract more information from history?
         # Old history comes first.
         if not self.use_hist: return
-        entry_hist = { }
+        entry_hist = {}
         hist_idx = self.num_hist
         for i in range(self.num_hist):
             m = mem[i + j]
-            entry_hist.update({ "hist%d_%s" % (hist_idx, k) : m[k] for k in self.hist_entries if k in m })
+            entry_hist.update(
+                {"hist%d_%s" % (hist_idx, k): m[k]
+                 for k in self.hist_entries if k in m}
+            )
             hist_idx -= 1
         return entry_hist
 
@@ -54,7 +58,10 @@ class ExpOp:
         m = mem[self.num_hist + j]
         m_next = mem[self.num_hist + j + 1]
 
-        entry_from_next = { k[self.len_last_symbol:] : v for k, v in m_next.items() if k.startswith(self.last_symbol) }
+        entry_from_next = {
+            k[self.len_last_symbol:]: v
+            for k, v in m_next.items() if k.startswith(self.last_symbol)
+        }
 
         if m_next["_seq"] - m["_seq"] != 1:
             # print("next_seq = %d, curr_seq = %d" % (m_next["_seq"], curr_seq))
@@ -75,7 +82,10 @@ class ExpOp:
         entries = []
         for j in range(T):
             m = mem[self.num_hist + j]
-            entry = { k : v for k, v in m.items() if k not in self.excluded_entries or k.startswith("_") }
+            entry = {
+                k: v
+                for k, v in m.items() if k not in self.excluded_entries or k.startswith("_")
+            }
 
             entry_from_next = self._get_future(mem, j)
             if entry_from_next is not None: entry.update(entry_from_next)
@@ -95,7 +105,9 @@ class ExpOp:
     def hist_size(self):
         return self.num_hist
 
+
 class BatchAssembler:
+
     def __init__(self, batchsize, exp_op, T=1):
         self.exp_op = exp_op
         self.T = T
@@ -106,7 +118,7 @@ class BatchAssembler:
         self.memory_length_limit = T * 3 + self.num_extra
 
         self.batchsize = batchsize
-        self.memory = defaultdict(lambda : CQueue(self.memory_length_limit))
+        self.memory = defaultdict(lambda: CQueue(self.memory_length_limit))
         self.counts = Counter()
 
     def sample_count(self):
@@ -125,7 +137,7 @@ class BatchAssembler:
         # qs has the following structure:
         # len(qs) == T
         # len(qs[t]) == n (batchsize)
-        qs = [ list() for _ in range(self.T)]
+        qs = [list() for _ in range(self.T)]
 
         # Each element of the batch comes from a different environemnt.
         counts_dup = Counter(self.counts)
@@ -193,11 +205,11 @@ class BatchAssembler:
 
         # Keep the order if possible.
         if ordered:
-            agent2idx = { b["_agent_name"] : i for i, b in enumerate(batch[0]) }
+            agent2idx = {b["_agent_name"]: i for i, b in enumerate(batch[0])}
             # If it is not 1:1 mapping, the following code would throw
             # exceptions.
             for t in range(len(batch)):
-                batch[t] = [ batch[t][agent2idx[m["_agent_name"]]] for m in ms ]
+                batch[t] = [batch[t][agent2idx[m["_agent_name"]]] for m in ms]
         return batch
 
     def print_stats(self):
@@ -219,7 +231,9 @@ class BatchAssembler:
             avg_mem_len += len(q)
             cnt += 1
 
-        print("Assembler: Limit: %d, Min: %d [%s], Max: %d [%s], Avg: %.2f[%d]"
-              % (self.memory_length_limit, min_mem_len, min_agent,
-                 max_mem_len, max_agent, avg_mem_len / cnt, cnt))
-
+        print(
+            "Assembler: Limit: %d, Min: %d [%s], Max: %d [%s], Avg: %.2f[%d]" % (
+                self.memory_length_limit, min_mem_len, min_agent, max_mem_len, max_agent,
+                avg_mem_len / cnt, cnt
+            )
+        )

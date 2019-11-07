@@ -15,11 +15,11 @@ import torch
 class Batch:
     """ A wrapper class for batch data"""
     torch_types = {
-        "int32_t" : torch.IntTensor,
-        "int64_t" : torch.LongTensor,
-        "float" : torch.FloatTensor,
-        "unsigned char" : torch.ByteTensor,
-        "char" : torch.ByteTensor
+        "int32_t": torch.IntTensor,
+        "int64_t": torch.LongTensor,
+        "float": torch.FloatTensor,
+        "unsigned char": torch.ByteTensor,
+        "char": torch.ByteTensor
     }
     numpy_types = {
         "int32_t": 'i4',
@@ -32,7 +32,7 @@ class Batch:
     def __init__(self, _batchsize=None, **kwargs):
         """ Initialize `Batch` class. Pass in a dict and wrap it into ``self.batch``"""
         if isinstance(_batchsize, int):
-            self.batch = { k : v[:, :_batchsize] for k, v in kwargs.items() }
+            self.batch = {k: v[:, :_batchsize] for k, v in kwargs.items()}
         else:
             self.batch = kwargs
 
@@ -84,7 +84,7 @@ class Batch:
             loaded batch object
         """
         batch = Batch()
-        batch.dims = { }
+        batch.dims = {}
         batch.GC = GC
 
         keys = desc["keys"]
@@ -138,7 +138,7 @@ class Batch:
             src(dict or `Batch`): batch data to be copied
         """
         this_src = src if isinstance(src, dict) else src.batch
-        key_assigned = { k : False for k in self.batch.keys() }
+        key_assigned = {k: False for k in self.batch.keys()}
 
         for k, v in this_src.items():
             # Copy it down to cpu.
@@ -157,7 +157,9 @@ class Batch:
                     bk[:] = v.view_as(bk[:])
 
             else:
-                raise ValueError("Batch[%s]: \"%s\" in reply is missing in batch specification" % (batch_key, k))
+                raise ValueError(
+                    "Batch[%s]: \"%s\" in reply is missing in batch specification" % (batch_key, k)
+                )
 
         # Check whether there is any key missing.
         for k, assigned in key_assigned.items():
@@ -170,7 +172,7 @@ class Batch:
         Args:
             gpu(int): gpu id
         """
-        batch = Batch(**{ k : v.cuda(gpu) for k, v in self.batch.items() })
+        batch = Batch(**{k: v.cuda(gpu) for k, v in self.batch.items()})
         batch.GC = self.GC
         return batch
 
@@ -183,7 +185,7 @@ class Batch:
             key(str): if None, return all key's history, otherwise just return that key's history
         """
         if key is None:
-            new_batch = Batch(**{ k : v[s] for k, v in self.batch.items() })
+            new_batch = Batch(**{k: v[s] for k, v in self.batch.items()})
             if hasattr(self, "GC"):
                 new_batch.GC = self.GC
             return new_batch
@@ -206,14 +208,15 @@ class Batch:
     def pin_clone(self):
         """ clone and pin memory for faster transportations to gpu """
 
-        return Batch(**{ k : v.clone().pin_memory() for k, v in self.batch.items() })
+        return Batch(**{k: v.clone().pin_memory() for k, v in self.batch.items()})
 
     def to_numpy(self):
         """ convert batch data to numpy format """
-        return { k : v.numpy() if not isinstance(v, np.ndarray) else v for k, v in self.batch.items() }
+        return {k: v.numpy() if not isinstance(v, np.ndarray) else v for k, v in self.batch.items()}
 
 
 class GCWrapper:
+
     def __init__(self, GC, co, descriptions, use_numpy=False, gpu=None, params=dict()):
         """Initialize GCWarpper
 
@@ -228,9 +231,11 @@ class GCWrapper:
 
         self._init_collectors(GC, co, descriptions, use_gpu=gpu is not None, use_numpy=use_numpy)
         self.gpu = gpu
-        self.inputs_gpu = [ self.inputs[gids[0]].cpu2gpu(gpu=gpu) for gids in self.gpu2gid ] if gpu is not None else None
+        self.inputs_gpu = [
+            self.inputs[gids[0]].cpu2gpu(gpu=gpu) for gids in self.gpu2gid
+        ] if gpu is not None else None
         self.params = params
-        self._cb = { }
+        self._cb = {}
 
     def _init_collectors(self, GC, co, descriptions, use_gpu=True, use_numpy=False):
         num_games = co.num_games
@@ -271,12 +276,16 @@ class GCWrapper:
             for i in range(num_recv_thread):
                 group_id = GC.AddCollectors(batchsize, len(gpu2gid) - 1, timeout_usec, gstat)
 
-                input_batch = Batch.load(GC, "input", input, group_id, use_gpu=use_gpu, use_numpy=use_numpy)
+                input_batch = Batch.load(
+                    GC, "input", input, group_id, use_gpu=use_gpu, use_numpy=use_numpy
+                )
                 input_batch.batchsize = batchsize
                 inputs.append(input_batch)
                 if reply is not None:
-                    reply_batch = Batch.load(GC, "reply", reply, group_id, use_gpu=use_gpu, use_numpy=use_numpy)
-                    reply_batch.batchsize= batchsize
+                    reply_batch = Batch.load(
+                        GC, "reply", reply, group_id, use_gpu=use_gpu, use_numpy=use_numpy
+                    )
+                    reply_batch.batchsize = batchsize
                     replies.append(reply_batch)
                 else:
                     replies.append(None)
@@ -370,7 +379,10 @@ class GCWrapper:
         for key, gids in self.name2idx.items():
             for gid in gids:
                 if gid not in self._cb:
-                    raise ValueError("GCWrapper.Start(): No callback function for key = %s and gid = %d" % (key, gid))
+                    raise ValueError(
+                        "GCWrapper.Start(): No callback function for key = %s and gid = %d" %
+                        (key, gid)
+                    )
 
     def Run(self):
         """Wait group of an arbitrary collector key. Samples in a returned batch are always from the same group, but the group key of the batch may be arbitrary."""
@@ -393,10 +405,12 @@ class GCWrapper:
 
     def reg_sig_int(self):
         import signal
+
         def signal_handler():
             print('Detected Ctrl-C!')
             self.Stop()
             sys.exit(0)
+
         signal.signal(signal.SIGINT, signal_handler)
 
     def PrintSummary(self):

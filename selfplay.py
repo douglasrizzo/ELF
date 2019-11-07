@@ -23,7 +23,9 @@ if __name__ == '__main__':
 
     model = env["model_loaders"][0].load_model(GC.params)
     env["mi"].add_model("model", model, opt=True)
-    env["mi"].add_model("actor", model, copy=True, cuda=all_args.gpu is not None, gpu_id=all_args.gpu)
+    env["mi"].add_model(
+        "actor", model, copy=True, cuda=all_args.gpu is not None, gpu_id=all_args.gpu
+    )
 
     trainer.setup(sampler=env["sampler"], mi=env["mi"], rl_method=env["method"])
     evaluator.setup(sampler=env["sampler"], mi=env["mi"].clone(gpu=all_args.gpu))
@@ -43,4 +45,3 @@ if __name__ == '__main__':
 
     runner.setup(GC, episode_summary=summary, episode_start=start)
     runner.run()
-

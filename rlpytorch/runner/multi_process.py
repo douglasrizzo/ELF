@@ -11,6 +11,7 @@ from ..args_provider import ArgsProvider
 
 
 class MultiProcessRun:
+
     def __init__(self):
         """ Initialization for MultiProcessRun.
         Accepted arguments:
@@ -20,8 +21,8 @@ class MultiProcessRun:
         ``tqdm``
         """
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("num_minibatch", 5000),
                 ("num_episode", 10000),
                 ("num_process", 2),
@@ -29,8 +30,16 @@ class MultiProcessRun:
             ]
         )
 
-    def setup(self, GC, mi, remote_init, remote_process,
-              episode_start=None, episode_summary=None, args=None):
+    def setup(
+        self,
+        GC,
+        mi,
+        remote_init,
+        remote_process,
+        episode_start=None,
+        episode_summary=None,
+        args=None
+    ):
         """ Setup for MultiProcessRun.
 
         Args:
@@ -86,7 +95,12 @@ class MultiProcessRun:
             if self.episode_summary is not None:
                 self.episode_summary(k)
 
-            print("Train stat: (%.2f) %d/%d" % (float(self.success_train_count) / self.total_train_count, self.success_train_count, self.total_train_count))
+            print(
+                "Train stat: (%.2f) %d/%d" % (
+                    float(self.success_train_count) / self.total_train_count,
+                    self.success_train_count, self.total_train_count
+                )
+            )
 
         self.GC.PrintSummary()
         self.GC.Stop()

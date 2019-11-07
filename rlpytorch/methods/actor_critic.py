@@ -14,6 +14,7 @@ from ..args_provider import ArgsProvider
 # Actor critic model.
 class ActorCritic:
     """ An actor critic model """
+
     def __init__(self):
         """ Initialization of `PolicyGradient`, `DiscountedReward` and `ValueMatcher`.
         Initialize the arguments needed (num_games, batchsize, value_node) and in child_providers.
@@ -23,11 +24,10 @@ class ActorCritic:
         self.value_matcher = ValueMatcher()
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-            ],
-            more_args = ["num_games", "batchsize", "value_node"],
-            child_providers = [ self.pg.args, self.discounted_reward.args, self.value_matcher.args ],
+            call_from=self,
+            define_args=[],
+            more_args=["num_games", "batchsize", "value_node"],
+            child_providers=[self.pg.args, self.discounted_reward.args, self.value_matcher.args],
         )
 
     def update(self, mi, batch, stats):
@@ -60,12 +60,12 @@ class ActorCritic:
             V = state_curr[value_node].squeeze()
 
             R = self.discounted_reward.feed(
-                dict(r=batch["r"][t], terminal=batch["terminal"][t]),
-                stats=stats)
+                dict(r=batch["r"][t], terminal=batch["terminal"][t]), stats=stats
+            )
 
-            policy_err = self.pg.feed(R-V.data, state_curr, bht, stats, old_pi_s=bht)
+            policy_err = self.pg.feed(R - V.data, state_curr, bht, stats, old_pi_s=bht)
             err = add_err(err, policy_err)
-            err = add_err(err, self.value_matcher.feed({ value_node: V, "target" : R}, stats))
+            err = add_err(err, self.value_matcher.feed({value_node: V, "target": R}, stats))
 
         stats["cost"].feed(err.item() / (T - 1))
         err.backward()

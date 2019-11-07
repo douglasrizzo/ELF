@@ -13,6 +13,7 @@ from ..args_provider import ArgsProvider
 
 
 class PolicyGradient:
+
     def __init__(self):
         """Initialization for arguments.
         Accepted arguments:
@@ -28,15 +29,27 @@ class PolicyGradient:
         ``policy_action_nodes``: ;separated string that specify policy_action nodes.
         """
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-                ("entropy_ratio", dict(type=float, help="The entropy ratio we put on PG", default=0.01)),
+            call_from=self,
+            define_args=[
+                (
+                    "entropy_ratio",
+                    dict(type=float, help="The entropy ratio we put on PG", default=0.01)
+                ),
                 ("grad_clip_norm", dict(type=float, help="Gradient norm clipping", default=None)),
-                ("min_prob", dict(type=float, help="Minimal probability used in training", default=1e-6)),
-                ("ratio_clamp", 10),
-                ("policy_action_nodes", dict(type=str, help=";separated string that specify policy_action nodes.", default="pi,a"))
+                (
+                    "min_prob",
+                    dict(type=float, help="Minimal probability used in training", default=1e-6)
+                ), ("ratio_clamp", 10),
+                (
+                    "policy_action_nodes",
+                    dict(
+                        type=str,
+                        help=";separated string that specify policy_action nodes.",
+                        default="pi,a"
+                    )
+                )
             ],
-            on_get_args = self._init,
+            on_get_args=self._init,
         )
 
     def _init(self, args):
@@ -80,12 +93,12 @@ class PolicyGradient:
         """
         args = self.args
 
-        errs = { }
+        errs = {}
         if isinstance(pi, list):
             # Action map, and we need compute the error one by one.
             for i, pix in enumerate(pi):
                 for j, pixy in enumerate(pix):
-                    errs = accumulate(errs, self._compute_one_policy_entropy_err(pixy, a[:,i,j]))
+                    errs = accumulate(errs, self._compute_one_policy_entropy_err(pixy, a[:, i, j]))
         else:
             errs = self._compute_one_policy_entropy_err(pi, a)
 
@@ -94,6 +107,7 @@ class PolicyGradient:
     def _reg_backward(self, v, pg_weights):
         """ Register the backward hook. Clip the gradient if necessary."""
         grad_clip_norm = getattr(self.args, "grad_clip_norm", None)
+
         def bw_hook(grad_in):
             # this works only on pytorch 0.2.0
             grad = grad_in.mul(pg_weights.view(-1, 1))
@@ -102,9 +116,10 @@ class PolicyGradient:
             if grad_clip_norm is not None:
                 average_norm_clip(grad, grad_clip_norm)
             return grad
+
         v.register_hook(bw_hook)
 
-    def feed(self, Q, pi_s, actions,  stats, old_pi_s=dict()):
+    def feed(self, Q, pi_s, actions, stats, old_pi_s=dict()):
         """
         One iteration of policy gradient.
 
@@ -140,7 +155,9 @@ class PolicyGradient:
                 old_pi = old_pi_s[pi_node].squeeze()
 
                 # Cap it.
-                coeff = torch.clamp(pi.data.div(old_pi), max=args.ratio_clamp).gather(1, a.view(-1, 1)).squeeze()
+                coeff = torch.clamp(
+                    pi.data.div(old_pi), max=args.ratio_clamp
+                ).gather(1, a.view(-1, 1)).squeeze()
                 pg_weights.mul_(coeff)
                 # There is another term (to compensate clamping), but we omit it for now.
 

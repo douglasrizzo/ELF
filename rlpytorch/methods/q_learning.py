@@ -15,6 +15,7 @@ from ..args_provider import ArgsProvider
 # Q learning
 class Q_learning:
     """ An actor critic model """
+
     def __init__(self):
         """ Initialization of `DiscountedReward` and `ValueMatcher`.
         Initialize the arguments needed (num_games, batchsize, value_node) and in child_providers.
@@ -23,13 +24,10 @@ class Q_learning:
         self.q_loss = nn.SmoothL1Loss().cuda()
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-                ("a_node", "a"),
-                ("Q_node", "Q")
-            ],
-            more_args = ["num_games", "batchsize"],
-            child_providers = [ self.discounted_reward.args ],
+            call_from=self,
+            define_args=[("a_node", "a"), ("Q_node", "Q")],
+            more_args=["num_games", "batchsize"],
+            child_providers=[self.discounted_reward.args],
         )
 
     def update(self, mi, batch, stats):
@@ -67,8 +65,8 @@ class Q_learning:
             a = state_curr[a_node].squeeze()
 
             R = self.discounted_reward.feed(
-                dict(r=batch["r"][t], terminal=batch["terminal"][t]),
-                stats=stats)
+                dict(r=batch["r"][t], terminal=batch["terminal"][t]), stats=stats
+            )
 
             # Then you want to match Q value here.
             # Q: batchsize * #action.

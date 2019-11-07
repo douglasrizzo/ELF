@@ -6,10 +6,11 @@ from rlpytorch.trainer import topk_accuracy
 
 
 class MultiplePrediction:
+
     def __init__(self):
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("multipred_no_backprop", dict(action="store_true")),
             ],
         )

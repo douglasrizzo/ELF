@@ -16,6 +16,7 @@ from .utils import *
 
 __all__ = ["MemoryReceiver"]
 
+
 def _initialize_batch_entry(batchsize, v, use_cuda=True):
     if isinstance(v, np.ndarray):
         shape = v.shape
@@ -44,6 +45,7 @@ def _initialize_batch_entry(batchsize, v, use_cuda=True):
 
     return entry
 
+
 def _initialize_batch_cpu(batch_cpu, batch_gpu, k, v, batchsize, use_cuda=True):
     if k not in batch_cpu:
         entry = _initialize_batch_entry(batchsize, v, use_cuda=use_cuda)
@@ -54,7 +56,7 @@ def _initialize_batch_cpu(batch_cpu, batch_gpu, k, v, batchsize, use_cuda=True):
     if isinstance(entry, np.ndarray):
         shape = entry.shape
     elif isinstance(entry, list):
-        shape = (len(entry),)
+        shape = (len(entry), )
     else:
         shape = entry.size()
 
@@ -65,6 +67,7 @@ def _initialize_batch_cpu(batch_cpu, batch_gpu, k, v, batchsize, use_cuda=True):
         if k in batch_gpu: del batch_gpu[k]
 
     return entry, shape
+
 
 def _cpu2gpu(batch_cpu, batch_gpu, allow_incomplete_batch=False):
     for batch_cpu_t, batch_gpu_t in zip(batch_cpu, batch_gpu):
@@ -90,10 +93,11 @@ def _cpu2gpu(batch_cpu, batch_gpu, allow_incomplete_batch=False):
             else:
                 batch_gpu_t[k] = batch_cpu_t[k]
 
+
 def _make_batch(batch, q, use_cuda=True, allow_incomplete_batch=False):
     ''' Lots of hacks in this function, need to fix in the future.'''
     if "cpu" not in batch:
-        batch.update({ "cpu" : [], "gpu" : [] })
+        batch.update({"cpu": [], "gpu": []})
 
     # For input q:
     # len(q) == T
@@ -117,7 +121,9 @@ def _make_batch(batch, q, use_cuda=True, allow_incomplete_batch=False):
     for q_t, batch_cpu_t, batch_gpu_t in zip(q, batch_cpu, batch_gpu):
         batch_cpu_t["_batchsize"] = batchsize
         for k, v in q_t[0].items():
-            entry, shape = _initialize_batch_cpu(batch_cpu_t, batch_gpu_t, k, v, batchsize, use_cuda=use_cuda)
+            entry, shape = _initialize_batch_cpu(
+                batch_cpu_t, batch_gpu_t, k, v, batchsize, use_cuda=use_cuda
+            )
             if len(shape) == 1:
                 for i in range(batchsize):
                     entry[i] = q_t[i][k]
@@ -134,11 +140,13 @@ def _make_batch(batch, q, use_cuda=True, allow_incomplete_batch=False):
     if use_cuda:
         _cpu2gpu(batch_cpu, batch_gpu, allow_incomplete_batch=allow_incomplete_batch)
 
+
 class Pool:
+
     def __init__(self, num_pool):
         # Open a thread to assemble the batch.
         self.num_pool = num_pool
-        self.pool = [ dict() for i in range(self.num_pool) ]
+        self.pool = [dict() for i in range(self.num_pool)]
 
         self.empty_entries = Queue()
         for i in range(num_pool):
@@ -154,6 +162,7 @@ class Pool:
 
 
 class SeqStats:
+
     def __init__(self, name="seq", seq_limits=None):
         # Stats.
         self.stats_seq = Counter()
@@ -161,7 +170,11 @@ class SeqStats:
         self.name = name
 
         if seq_limits is None:
-            self.limits = [1, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000, 2500, 3000, 4000, 5000, float("inf")]
+            self.limits = [
+                1, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000,
+                2500, 3000, 4000, 5000,
+                float("inf")
+            ]
         else:
             self.limits = seq_limits
             if not np.isinf(self.limits[-1]):
@@ -185,10 +198,15 @@ class SeqStats:
     def print_stats(self, reset=False):
         total_counts = sum(self.stats_seq.values())
         if total_counts > 0:
-            print("Distribution of %s [min = %d / max = %d / #count = %d]:" % (self.name, self.min_seq, self.max_seq, total_counts))
+            print(
+                "Distribution of %s [min = %d / max = %d / #count = %d]:" %
+                (self.name, self.min_seq, self.max_seq, total_counts)
+            )
             s = ""
-            for r in sorted(self.stats_seq.keys(), key=lambda x : float(x.split(",")[0][1:])):
-                s += "%s: %d [%.2lf%%]\n" % (r, self.stats_seq[r], 100.0 * self.stats_seq[r] / total_counts)
+            for r in sorted(self.stats_seq.keys(), key=lambda x: float(x.split(",")[0][1:])):
+                s += "%s: %d [%.2lf%%]\n" % (
+                    r, self.stats_seq[r], 100.0 * self.stats_seq[r] / total_counts
+                )
             print(s)
         else:
             print("Distribution of %s [#count = %d]:" % (self.name, total_counts))
@@ -202,6 +220,7 @@ class SeqStats:
 
 
 class Timer:
+
     def __init__(self):
         self.reset()
 
@@ -227,11 +246,12 @@ class Timer:
         return rets
 
     def reset(self):
-        self.records = defaultdict(lambda : [0, 0])
-        self.before = { }
+        self.records = defaultdict(lambda: [0, 0])
+        self.before = {}
 
 
 class BatchStats:
+
     def __init__(self, seq_limits=None):
         # Stats.
         self.stats_agent = Counter()
@@ -279,10 +299,21 @@ def ZMQDecoder(receive_data):
 
     return m
 
+
 class MemoryReceiver:
-    def __init__(self, name, ch, batch_assembler, batch_queue,
-                 prompt=None, decoder=ZMQDecoder, allow_incomplete_batch=False,
-                 seq_limits=None, replier=None):
+
+    def __init__(
+        self,
+        name,
+        ch,
+        batch_assembler,
+        batch_queue,
+        prompt=None,
+        decoder=ZMQDecoder,
+        allow_incomplete_batch=False,
+        seq_limits=None,
+        replier=None
+    ):
         self.name = name
         self.ch = ch
 
@@ -334,9 +365,15 @@ class MemoryReceiver:
         if self.prompt is not None:
             print(self.prompt["on_make_batch"], end="")
             sys.stdout.flush()
-        _make_batch(batch, qs, use_cuda=self.use_cuda, allow_incomplete_batch=self.allow_incomplete_batch)
+        _make_batch(
+            batch, qs, use_cuda=self.use_cuda, allow_incomplete_batch=self.allow_incomplete_batch
+        )
         self.batch_stats.add_stats(batch["cpu"][0])
-        queue_put(self.batch_queue, (self, batch), done_flag=self.done_flag, fail_comment="BatchConnector.on_data.queue_put failed, retrying")
+        queue_put(
+            self.batch_queue, (self, batch),
+            done_flag=self.done_flag,
+            fail_comment="BatchConnector.on_data.queue_put failed, retrying"
+        )
 
     def _preprocess(self, raw_data):
         ''' Return a list contains all the data to be fed to the assembler
@@ -375,7 +412,7 @@ class MemoryReceiver:
             with self.timer("receive"):
                 raw_data = self.ch.Receive()
 
-            m =  self._preprocess(raw_data)
+            m = self._preprocess(raw_data)
             if m is None: break
 
             if len(m) == 0:
@@ -408,4 +445,3 @@ class MemoryReceiver:
         if self.prompt is not None:
             print(self.prompt["on_release_batch"], end="")
             sys.stdout.flush()
-

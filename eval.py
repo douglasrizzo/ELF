@@ -14,7 +14,9 @@ from rlpytorch import load_env, Evaluator, EvalIters
 if __name__ == '__main__':
     evaluator = Evaluator(stats=False)
     eval_iters = EvalIters()
-    env, args = load_env(os.environ, overrides=dict(actor_only=True), evaluator=evaluator, eval_iters=eval_iters)
+    env, args = load_env(
+        os.environ, overrides=dict(actor_only=True), evaluator=evaluator, eval_iters=eval_iters
+    )
 
     GC = env["game"].initialize()
 
@@ -45,4 +47,3 @@ if __name__ == '__main__':
     for _ in eval_iters.iters():
         GC.Run()
     GC.Stop()
-

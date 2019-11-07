@@ -14,8 +14,14 @@ from rlpytorch import *
 if __name__ == '__main__':
     verbose = False
     runner = SingleProcessRun()
-    evaluators = [ Evaluator(name="eval" + str(i), verbose=verbose) for i in range(2) ]
-    env, all_args = load_env(os.environ, num_models=2, evaluators=evaluators, runner=runner, overrides=dict(actor_only=True))
+    evaluators = [Evaluator(name="eval" + str(i), verbose=verbose) for i in range(2)]
+    env, all_args = load_env(
+        os.environ,
+        num_models=2,
+        evaluators=evaluators,
+        runner=runner,
+        overrides=dict(actor_only=True)
+    )
 
     GC = env["game"].initialize_selfplay()
 
@@ -36,4 +42,3 @@ if __name__ == '__main__':
 
     runner.setup(GC, episode_summary=summary, episode_start=start)
     runner.run()
-

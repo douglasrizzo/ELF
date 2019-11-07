@@ -10,6 +10,7 @@ from collections import defaultdict
 
 class OfflineReplay:
     ''' Offline Replay '''
+
     def __init__(self, priority_level=1):
         self.replays = [list() for i in range(priority_level)]
 
@@ -26,15 +27,17 @@ class OfflineReplay:
         start = random.randint(0, len(self.replays[level]) - T)
 
         # Return an iterator.
-        return (m for m in self.replays[level][start:start+T])
+        return (m for m in self.replays[level][start:start + T])
+
 
 class BatchAssemblerOffline:
+
     def __init__(self, batchsize, exp_op, T=1, data_switch=None):
         self.T = T
         self.exp_op = exp_op
         self.num_extra = self.exp_op.size()
         self.batchsize = batchsize
-        self.memory = defaultdict(lambda : OfflineReplay())
+        self.memory = defaultdict(lambda: OfflineReplay())
 
         self.num_total_collections = 100000
         self.freq_prompt_collection = self.num_total_collections / 10
@@ -71,7 +74,7 @@ class BatchAssemblerOffline:
             print("[Start to get_batch]")
             self.available_agent_names = list(self.memory.keys())
 
-        qs = [ list() for t in range(self.T)]
+        qs = [list() for t in range(self.T)]
         for i in range(self.batchsize):
             agent_name = random.choice(self.available_agent_names)
             this_mem = list(self.memory[agent_name].sample(self.T + self.num_extra))
@@ -95,5 +98,3 @@ class BatchAssemblerOffline:
 
     def print_stats(self):
         pass
-
-

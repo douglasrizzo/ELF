@@ -15,13 +15,15 @@ def flattern(x):
 
 
 class Model_ActorCritic(Model):
+
     def __init__(self, args):
         super(Model_ActorCritic, self).__init__(args)
         self._init(args)
 
     def _init(self, args):
         params = args.params
-        assert isinstance(params["num_action"], int), "num_action has to be a number. action = " + str(params["num_action"])
+        assert isinstance(params["num_action"], int
+                          ), "num_action has to be a number. action = " + str(params["num_action"])
         self.params = params
         self.net = MiniRTSNet(args, output1d=False)
 
@@ -59,7 +61,15 @@ class Model_ActorCritic(Model):
         build_types = self.softmax(self.build_types(flat_output))
         value = self.value(flat_output)
 
-        return dict(V=value, uloc_prob=unit_locs, tloc_prob=target_locs, ct_prob=cmd_types, bt_prob=build_types, action_type=1)
+        return dict(
+            V=value,
+            uloc_prob=unit_locs,
+            tloc_prob=target_locs,
+            ct_prob=cmd_types,
+            bt_prob=build_types,
+            action_type=1
+        )
+
 
 # Format: key, [model, method]
 # if method is None, fall back to default mapping from key to method
@@ -70,5 +80,5 @@ Models = {
 Defaults = {
     "sample_nodes": "uloc_prob,uloc;tloc_prob,tloc;ct_prob,ct;bt_prob,bt",
     "policy_action_nodes": "uloc_prob,uloc;tloc_prob,tloc;ct_prob,ct;bt_prob,bt",
-    "arch" : "cccc;-,64,64,64,-"
+    "arch": "cccc;-,64,64,64,-"
 }

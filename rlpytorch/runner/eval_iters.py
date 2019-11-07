@@ -9,6 +9,7 @@ from ..stats import Stats
 
 
 class EvalIters:
+
     def __init__(self):
         """ Initialization for Evaluation.
         Accepted arguments:
@@ -19,13 +20,10 @@ class EvalIters:
         """
         self.stats = Stats("eval")
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-                ("num_eval", 500),
-                ("tqdm", dict(action="store_true"))
-            ],
-            on_get_args = self._on_get_args,
-            child_providers = [ self.stats.args ]
+            call_from=self,
+            define_args=[("num_eval", 500), ("tqdm", dict(action="store_true"))],
+            on_get_args=self._on_get_args,
+            child_providers=[self.stats.args]
         )
 
     def _on_get_args(self, _):

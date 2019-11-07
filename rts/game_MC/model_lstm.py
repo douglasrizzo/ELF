@@ -12,13 +12,15 @@ from rlpytorch import Model, RNNActorCritic
 
 
 class Model_RNNActorCritic(Model):
+
     def __init__(self, args):
         super(Model_RNNActorCritic, self).__init__(args)
         self._init(args)
 
     def _init(self, args):
         params = args.params
-        assert isinstance(params["num_action"], int), "num_action has to be a number. action = " + str(params["num_action"])
+        assert isinstance(params["num_action"], int
+                          ), "num_action has to be a number. action = " + str(params["num_action"])
         self.params = params
         self.net = MiniRTSNet(args)
 
@@ -98,7 +100,9 @@ class Model_RNNActorCritic(Model):
             self.prob[0] = 1 - self.args.ratio_skip_observation
             self.prob[1] = self.args.ratio_skip_observation
 
-        skip_mat = self._var(torch.multinomial(self.prob, batchsize, replacement=True).float().view(-1, 1))
+        skip_mat = self._var(
+            torch.multinomial(self.prob, batchsize, replacement=True).float().view(-1, 1)
+        )
 
         output = self._merge(x, hiddens, skip_mat)
         return self.decision(output)
@@ -121,6 +125,7 @@ class Model_RNNActorCritic(Model):
         policy = self.softmax(self.linear_policy(h))
         value = self.linear_value(h)
         return dict(h=h, V=value, pi=policy)
+
 
 # Format: key, [model, method]
 # if method is None, fall back to default mapping from key to method

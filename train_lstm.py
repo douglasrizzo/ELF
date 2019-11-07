@@ -20,15 +20,13 @@ if __name__ == '__main__':
 
     model = env["model_loaders"][0].load_model(GC.params)
     mi = ModelInterface()
-    mi.add_model("model", model, params={ "lr" : 0.001})
+    mi.add_model("model", model, params={"lr": 0.001})
     mi.add_model("actor", model, copy=True, cuda=all_args.gpu is not None, gpu_id=all_args.gpu)
 
     trainer.setup(sampler=env["sampler"], mi=mi, rl_method=env["method"])
 
     GC.reg_callback("train", trainer.train)
     GC.reg_callback("actor", trainer.actor)
-    runner.setup(GC, episode_summary=trainer.episode_summary,
-                episode_start=trainer.episode_start)
+    runner.setup(GC, episode_summary=trainer.episode_summary, episode_start=trainer.episode_start)
 
     runner.run()
-

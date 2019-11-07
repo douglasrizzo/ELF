@@ -12,6 +12,7 @@ from ..args_provider import ArgsProvider
 
 
 class ValueMatcher:
+
     def __init__(self):
         """ Initialize value matcher.
         Accepted arguments:
@@ -21,12 +22,12 @@ class ValueMatcher:
         ``value_node``:  name of the value node
         """
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("grad_clip_norm", dict(type=float, help="Gradient norm clipping", default=None)),
                 ("value_node", dict(type=str, help="The name of the value node", default="V"))
             ],
-            on_get_args = self._init,
+            on_get_args=self._init,
         )
 
     def _init(self, _):
@@ -38,6 +39,7 @@ class ValueMatcher:
         """ Register the backward hook. Clip the gradient if necessary."""
         grad_clip_norm = getattr(self.args, "grad_clip_norm", None)
         if grad_clip_norm:
+
             def bw_hook(grad_in):
                 grad = grad_in.clone()
                 if grad_clip_norm is not None:

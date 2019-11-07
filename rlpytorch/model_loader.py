@@ -12,8 +12,8 @@ from .args_provider import ArgsProvider
 from .model_interface import ModelInterface
 from .sampler import Sampler
 
-
 # from .utils.utils import get_total_size
+
 
 def load_module(mod):
     """ Load a python module"""
@@ -21,8 +21,10 @@ def load_module(mod):
     module = __import__(os.path.basename(mod))
     return module
 
+
 class ModelLoader:
     """ Class to load a previously saved model"""
+
     def __init__(self, model_class, model_idx=None):
         """ Initialization, Accepted arguments:
         ``load``:specify the model to be loaded
@@ -37,25 +39,35 @@ class ModelLoader:
         self.model_class = model_class
         self.model_idx = model_idx
 
-        define_args =[
+        define_args = [
             ("load", dict(type=str, help="load model", default=None)),
-            ("onload", dict(type=str, help="function(s) to call after loading. e.g., reset,zero_first_layer. These functions are specified in the model", default=None)),
+            (
+                "onload",
+                dict(
+                    type=str,
+                    help=
+                    "function(s) to call after loading. e.g., reset,zero_first_layer. These functions are specified in the model",
+                    default=None
+                )
+            ),
             ("omit_keys", dict(type=str, help="omitted keys when loading.", default=None)),
         ]
 
         self.define_args = define_args
         if model_idx is not None:
-            self.define_args_final = [ (e[0] + str(model_idx), e[1]) for e in define_args ]
+            self.define_args_final = [(e[0] + str(model_idx), e[1]) for e in define_args]
         else:
             self.define_args_final = self.define_args
 
-        combined_args = self.define_args_final + model_class.get_define_args() if hasattr(model_class, "get_define_args") else self.define_args_final
+        combined_args = self.define_args_final + model_class.get_define_args() if hasattr(
+            model_class, "get_define_args"
+        ) else self.define_args_final
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = combined_args,
-            more_args = ["gpu"],
-            on_get_args = self._on_get_args
+            call_from=self,
+            define_args=combined_args,
+            more_args=["gpu"],
+            on_get_args=self._on_get_args
         )
 
     def _on_get_args(self, _):
@@ -99,6 +111,7 @@ class ModelLoader:
 
         return model
 
+
 def load_env(envs, num_models=None, overrides=dict(), defaults=dict(), **kwargs):
     """ Load envs. envs will be specified as environment variables, more specifically, ``game``, ``model_file`` and ``model`` are required.
 
@@ -127,13 +140,13 @@ def load_env(envs, num_models=None, overrides=dict(), defaults=dict(), **kwargs)
 
     # You might want multiple models loaded.
     if num_models is None:
-        model_loaders = [ ModelLoader(model_class) ]
+        model_loaders = [ModelLoader(model_class)]
     else:
-        model_loaders = [ ModelLoader(model_class, model_idx=i) for i in range(num_models) ]
+        model_loaders = [ModelLoader(model_class, model_idx=i) for i in range(num_models)]
 
     env = dict(game=game, method=method, sampler=sampler, model_loaders=model_loaders, mi=mi)
     env.update(kwargs)
 
     parser = argparse.ArgumentParser()
     all_args = ArgsProvider.Load(parser, env, global_defaults=defaults, global_overrides=overrides)
-    return  env, all_args
+    return env, all_args

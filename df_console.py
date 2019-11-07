@@ -18,18 +18,22 @@ def move2xy(v):
     y = int(v[1:]) - 1
     return x, y
 
+
 def move2action(v):
     x, y = move2xy(v)
     return x * 19 + y
+
 
 def xy2move(x, y):
     if x >= 8: x += 1
     return chr(x + 65) + str(y + 1)
 
+
 def action2move(a):
     x = a // 19
     y = a % 19
     return xy2move(x, y)
+
 
 def plot_plane(v):
     s = ""
@@ -43,7 +47,7 @@ def plot_plane(v):
     print(s)
 
 
-def topk_accuracy2(batch, state_curr, topk=(1,)):
+def topk_accuracy2(batch, state_curr, topk=(1, )):
     pi = state_curr["pi"]
     import torch
     if isinstance(pi, torch.autograd.Variable):
@@ -61,16 +65,17 @@ def topk_accuracy2(batch, state_curr, topk=(1,)):
     for i in range(maxk):
         topn_count[i] /= indices.size(0)
 
-    return [ topn_count[i - 1] for i in topk ]
+    return [topn_count[i - 1] for i in topk]
 
 
 class DFConsole:
+
     def __init__(self):
         self.exit = False
 
     def check(self, batch):
         reply = self.evaluator.actor(batch)
-        topk = topk_accuracy2(batch, reply, topk=(1,2,3,4,5))
+        topk = topk_accuracy2(batch, reply, topk=(1, 2, 3, 4, 5))
         for i, v in enumerate(topk):
             self.check_stats[i] += v
         if sum(topk) == 0: self.check_stats[-1] += 1
@@ -177,7 +182,18 @@ class DFConsole:
     def main_loop(self):
         evaluator = Evaluator(stats=False)
         # Set game to online model.
-        env, args = load_env(os.environ, evaluator=evaluator, overrides=dict(num_games=1, batchsize=1, num_games_per_thread=1, greedy=True, T=1, additional_labels="aug_code,move_idx"))
+        env, args = load_env(
+            os.environ,
+            evaluator=evaluator,
+            overrides=dict(
+                num_games=1,
+                batchsize=1,
+                num_games_per_thread=1,
+                greedy=True,
+                T=1,
+                additional_labels="aug_code,move_idx"
+            )
+        )
 
         GC = env["game"].initialize()
         model = env["model_loaders"][0].load_model(GC.params)
@@ -214,6 +230,7 @@ class DFConsole:
             GC.Run()
             if self.exit: break
         GC.Stop()
+
 
 if __name__ == '__main__':
     console = DFConsole()

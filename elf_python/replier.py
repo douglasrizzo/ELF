@@ -12,6 +12,7 @@ from .utils import queue_get, queue_put
 
 
 class Replier:
+
     def __init__(self, ch, reply_batchsize=1, done_flag=None):
         self.reply_batchsize = reply_batchsize
         self.ch = ch
@@ -27,7 +28,11 @@ class Replier:
     def _thread_reply(self):
         batch_reply = defaultdict(list)
         while True:
-            items = queue_get(self.reply_queue, done_flag=self.done_flag, fail_comment="BatchConnector._thread_reply.queue_get failed, retrying...")
+            items = queue_get(
+                self.reply_queue,
+                done_flag=self.done_flag,
+                fail_comment="BatchConnector._thread_reply.queue_get failed, retrying..."
+            )
 
             for item in items:
                 if "_key" not in item: continue
@@ -39,7 +44,8 @@ class Replier:
 
                 sender = item["_sender"]
                 batch_reply[sender].append(item)
-                if len(batch_reply[sender]) >= self.reply_batchsize or item.get("_immediate", False):
+                if len(batch_reply[sender]
+                       ) >= self.reply_batchsize or item.get("_immediate", False):
                     self.ch.Send(batch_reply[sender], to=sender)
                     batch_reply[sender] = []
 
@@ -55,10 +61,21 @@ class Replier:
         game_counters = batch_t["_game_counter"][:n]
 
         all_data = []
-        for i, (identity, agent_name, seq, key, game_counter) in enumerate(zip(senders, agent_names, seqs, keys, game_counters)):
-            this_data = dict(_sender=identity, _agent_name=agent_name, _seq=seq, _key=key, _game_counter=game_counter)
+        for i, (identity, agent_name, seq, key,
+                game_counter) in enumerate(zip(senders, agent_names, seqs, keys, game_counters)):
+            this_data = dict(
+                _sender=identity,
+                _agent_name=agent_name,
+                _seq=seq,
+                _key=key,
+                _game_counter=game_counter
+            )
             for k, v in data.items():
-                this_data.update({ k : v[i]})
+                this_data.update({k: v[i]})
             # print("Reply[%d]: %s" % (i, str(this_data)))
             all_data.append(this_data)
-        queue_put(self.reply_queue, all_data, fail_comment="BatchConnector.reply.queue_put failed, retrying...")
+        queue_put(
+            self.reply_queue,
+            all_data,
+            fail_comment="BatchConnector.reply.queue_put failed, retrying..."
+        )

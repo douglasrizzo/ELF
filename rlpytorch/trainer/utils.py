@@ -12,6 +12,7 @@ from ..args_provider import ArgsProvider
 
 
 class SymLink:
+
     def __init__(self, sym_prefix, latest_k=5):
         self.sym_prefix = sym_prefix
         self.latest_k = latest_k
@@ -33,17 +34,18 @@ class SymLink:
 
 
 class ModelSaver:
+
     def __init__(self):
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("record_dir", "./record"),
                 ("save_prefix", "save"),
                 ("save_dir", dict(type=str, default=os.environ.get("save", "./"))),
                 ("latest_symlink", "latest"),
             ],
-            more_args = ["num_games", "batchsize"],
-            on_get_args = self._on_get_args,
+            more_args=["num_games", "batchsize"],
+            on_get_args=self._on_get_args,
         )
 
     def _on_get_args(self, _):
@@ -66,6 +68,7 @@ class ModelSaver:
 
 
 class ValueStats:
+
     def __init__(self, name=None):
         self.name = name
         self.reset()
@@ -102,7 +105,7 @@ class ValueStats:
         self.min_idx = None
 
 
-def topk_accuracy(output, target, topk=(1,)):
+def topk_accuracy(output, target, topk=(1, )):
     """Computes the precision@k for the specified values of k"""
     maxk = max(topk)
     batch_size = target.size(0)
@@ -117,12 +120,14 @@ def topk_accuracy(output, target, topk=(1,)):
         res.append(correct_k.mul_(100.0 / batch_size))
     return res
 
+
 class MultiCounter:
+
     def __init__(self, verbose=False):
         self.last_time = None
         self.verbose = verbose
         self.counts = Counter()
-        self.stats = defaultdict(lambda : ValueStats())
+        self.stats = defaultdict(lambda: ValueStats())
         self.total_count = 0
 
     def inc(self, key):
@@ -133,7 +138,10 @@ class MultiCounter:
     def summary(self, global_counter=None, reset=True):
         this_time = datetime.now()
         if self.last_time is not None:
-            print("[%d] Time spent = %f ms" % (global_counter, (this_time - self.last_time).total_seconds() * 1000))
+            print(
+                "[%d] Time spent = %f ms" %
+                (global_counter, (this_time - self.last_time).total_seconds() * 1000)
+            )
         self.last_time = this_time
 
         for key, count in self.counts.items():
@@ -147,5 +155,3 @@ class MultiCounter:
         if reset:
             self.counts = Counter()
             self.total_count = 0
-
-

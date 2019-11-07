@@ -4,6 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
+
 class CQueue:
     ''' Custom-made circular queue, which is fixed sized.
         The motivation here is to have
@@ -11,6 +12,7 @@ class CQueue:
           In contrast, deque has O(n) complexity
         * O(1) complexity to sample from the queue (e.g., sampling replays)
     '''
+
     def __init__(self, n):
         ''' Preallocate n slots for circular queue '''
         self.n = n
@@ -111,4 +113,3 @@ class CQueue:
 
     def __len__(self):
         return self.sz
-

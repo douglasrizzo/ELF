@@ -6,8 +6,10 @@
 
 from ..args_provider import ArgsProvider
 
+
 class EvalCount:
     """ Eval Count. Run games and record required stats."""
+
     def __init__(self):
         # All previous ids.
         self.ids = dict()
@@ -70,7 +72,6 @@ class EvalCount:
         for k, v in summary.items():
             print("%s: %s" % (str(k), str(v)))
 
-
     def feed_batch(self, batch, hist_idx=0):
         ids = batch["id"][hist_idx]
         last_terminals = batch["last_terminal"][hist_idx]
@@ -81,8 +82,10 @@ class EvalCount:
             if last_terminal.item() == 1:
                 self.terminal(id.item())
 
+
 class RewardCount(EvalCount):
     """ Class to accumulate rewards achieved"""
+
     def __init__(self):
         super(RewardCount, self).__init__()
         self.reset()
@@ -99,12 +102,15 @@ class RewardCount(EvalCount):
         return record + reward
 
     def _summary(self):
-        str_reward = "[%d] Reward: %.2f/%d" % (self.summary_count, float(self.sum_reward) / (self.n + 1e-10), self.n)
+        str_reward = "[%d] Reward: %.2f/%d" % (
+            self.summary_count, float(self.sum_reward) / (self.n + 1e-10), self.n
+        )
         return dict(str_reward=str_reward)
 
 
 class WinRate(EvalCount):
     """ Class to accumulate game results to win rate"""
+
     def __init__(self):
         super(WinRate, self).__init__()
         self.total_win_count = 0
@@ -134,35 +140,50 @@ class WinRate(EvalCount):
             self.highest_win_rate_idx = self.summary_count
             new_record = True
 
-        str_win_rate = "[%d] Win rate: %.3f [%d/%d/%d], Best win rate: %.3f [%d]" % (self.summary_count, win_rate, self.win_count, self.lose_count, total, self.highest_win_rate, self.highest_win_rate_idx)
+        str_win_rate = "[%d] Win rate: %.3f [%d/%d/%d], Best win rate: %.3f [%d]" % (
+            self.summary_count, win_rate, self.win_count, self.lose_count, total,
+            self.highest_win_rate, self.highest_win_rate_idx
+        )
 
         total = self.total_win_count + self.total_lose_count
-        str_acc_win_rate = "Accumulated win rate: %.3f [%d/%d/%d]" % (self.total_win_count / (total + 1e-10), self.total_win_count, self.total_lose_count, total)
+        str_acc_win_rate = "Accumulated win rate: %.3f [%d/%d/%d]" % (
+            self.total_win_count / (total + 1e-10), self.total_win_count, self.total_lose_count,
+            total
+        )
 
-        return dict(new_record=new_record,
+        return dict(
+            new_record=new_record,
             count=self.summary_count,
             best_win_rate=self.highest_win_rate,
             str_win_rate=str_win_rate,
             str_acc_win_rate=str_acc_win_rate,
         )
 
-    def win_count(self): return self.total_win_count
-    def lose_count(self): return self.total_lose_count
-    def total_winlose_count(self): return self.total_win_count + self.total_lose_count
-    def winlose_count(self): return self.win_count + self.lose_count
+    def win_count(self):
+        return self.total_win_count
+
+    def lose_count(self):
+        return self.total_lose_count
+
+    def total_winlose_count(self):
+        return self.total_win_count + self.total_lose_count
+
+    def winlose_count(self):
+        return self.win_count + self.lose_count
 
 
 class Stats(EvalCount):
+
     def __init__(self, stats_name=""):
         """ Initialization for Stats, Accepted arguments: ``rewards`` or ``winrate`` to track"""
         self.name = stats_name + "_stats"
         self.collector = None
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 (self.name, dict(type=str, choices=["rewards", "winrate"], default=None)),
             ],
-            on_get_args = self._on_get_args
+            on_get_args=self._on_get_args
         )
 
     def _on_get_args(self, _):

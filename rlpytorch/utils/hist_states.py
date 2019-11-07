@@ -6,9 +6,11 @@
 
 from collections import defaultdict, deque
 
+
 class HistState:
+
     def __init__(self, T, init_state_func=None):
-        self.hs = defaultdict(lambda : deque())
+        self.hs = defaultdict(lambda: deque())
         self.T = T
         self.init_state_func = init_state_func
 
@@ -50,13 +52,13 @@ class HistState:
         for i, id in enumerate(ids):
             if id in self.hs:
                 if not list_output:
-                    data[i,:] = self.hs[id][t]
+                    data[i, :] = self.hs[id][t]
                 else:
                     data.append(self.hs[id][t])
         return data
 
     def newest(self, ids, t, default=None):
-        return self._get_batch(ids, -t-1, default=default)
+        return self._get_batch(ids, -t - 1, default=default)
 
     def oldest(self, ids, t, default=None):
         return self._get_batch(ids, t, default=default)
@@ -76,4 +78,3 @@ class HistState:
             for id, h in zip(ids, output):
                 if t < len(self.hs[id]):
                     self.hs[id][t] = h
-

@@ -10,6 +10,7 @@ from ..args_provider import ArgsProvider
 
 
 class SingleProcessRun:
+
     def __init__(self):
         """ Initialization for SingleProcessRun. Accepted arguments:
         ``num_minibatch``,
@@ -19,8 +20,8 @@ class SingleProcessRun:
         ``tqdm``
         """
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("num_minibatch", 5000),
                 ("num_episode", 10000),
                 ("tqdm", dict(action="store_true")),
@@ -65,6 +66,7 @@ class SingleProcessRun:
 
     def run_multithread(self):
         """ Start training in a multithreaded environment """
+
         def train_thread():
             args = self.args
             for i in range(args.num_episode):

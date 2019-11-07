@@ -12,25 +12,26 @@ import torch.optim
 
 from .args_provider import ArgsProvider
 
-
 # All model must provide .outputs and .preprocess
 # E.g., .outputs = { "Q" : self.final_linear_layer }
 #       .preprocess = lambda self, x: downsample(x)
 
+
 class ModelInterface:
     """ An interface for the model to receive intermediate results from the forward pass """
+
     def __init__(self):
         """ Initialization for models and optimizers.
         ``models`` is a dict that can contain multiple models in a single `ModelInterface`
         For each model in ``models``, there is an optimizer in ``optimizers`` in correspondence, using ``torch.optim.Adam``.
         """
-        self.models = { }
+        self.models = {}
         self.old_models = deque()
-        self.optimizers = { }
+        self.optimizers = {}
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("opt_method", "adam"),
                 ("lr", 1e-3),
                 ("adam_eps", 1e-3),
@@ -73,7 +74,6 @@ class ModelInterface:
                             new_optim.state[k] = new_optim.state[k].cuda(gpu)
                 '''
         return mi
-
 
     def add_model(self, key, model, copy=False, cuda=False, gpu_id=None, opt=False, params={}):
         """Add a model to `ModelInterface`.
@@ -159,6 +159,7 @@ class ModelInterface:
         record = interface(input)
         Then record["Q"] will be the Q-function given the input.
     '''
+
     def zero_grad(self):
         """ Zero the gradient for all ``optimizers`` """
         for k, optimizer in self.optimizers.items():

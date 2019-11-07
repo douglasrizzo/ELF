@@ -10,11 +10,12 @@ import torch
 import tqdm
 
 from elf_python import GCWrapper, Simulator
-
 '''Minimal example that uses the Python version of concurrent environment from ELF'''
+
 
 class SimpleGame(Simulator):
     MAX_STATE = 6
+
     def __init__(self, id, desc):
         super(SimpleGame, self).__init__(id, desc)
 
@@ -56,7 +57,9 @@ class SimpleGame(Simulator):
             if self.state < 0:
                 self.state = 0
 
+
 class Trainer:
+
     def __init__(self):
         pass
 
@@ -69,20 +72,13 @@ class Trainer:
         action = torch.IntTensor(batchsize)
         for i in range(batchsize):
             action[i] = random.randint(0, 1)
-        return dict(a = action)
+        return dict(a=action)
+
 
 if __name__ == '__main__':
     desc = dict(
-        actor=dict(
-            input = dict(s=""),
-            reply = dict(a=""),
-            connector = "actor-connector"
-        ),
-        train=dict(
-            input = dict(s="", r=""),
-            reply = None,
-            connector = "trainer-connector"
-        )
+        actor=dict(input=dict(s=""), reply=dict(a=""), connector="actor-connector"),
+        train=dict(input=dict(s="", r=""), reply=None, connector="trainer-connector")
     )
     wrapper = GCWrapper(SimpleGame, desc, 32, 8, 1)
     trainer = Trainer()

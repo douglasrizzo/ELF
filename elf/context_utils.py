@@ -6,11 +6,13 @@
 
 from rlpytorch import ArgsProvider
 
+
 class ContextArgs:
+
     def __init__(self):
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("num_games", 1024),
                 ("batchsize", 128),
                 ("game_multi", dict(type=int, default=None)),
@@ -25,12 +27,11 @@ class ContextArgs:
                 ("mcts_verbose", dict(action="store_true")),
                 ("mcts_save_tree_filename", ""),
                 ("mcts_verbose_time", dict(action="store_true")),
-
                 ("mcts_use_prior", dict(action="store_true")),
                 ("mcts_pseudo_games", 0),
                 ("mcts_pick_method", "most_visited"),
             ],
-            on_get_args = self._on_get_args
+            on_get_args=self._on_get_args
         )
 
     def _on_get_args(self, args):
@@ -64,5 +65,3 @@ class ContextArgs:
         mcts.use_prior = args.mcts_use_prior
         mcts.pseudo_games = args.mcts_pseudo_games
         mcts.pick_method = args.mcts_pick_method
-
-

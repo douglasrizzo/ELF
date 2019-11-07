@@ -12,6 +12,7 @@ from rlpytorch import Model
 
 
 class MiniRTSNet(Model):
+
     def __init__(self, args, output1d=True):
         # this is the place where you instantiate all your modules
         # you can later access them using the same names you've given them in here
@@ -41,14 +42,17 @@ class MiniRTSNet(Model):
             else:
                 self.num_channels.append(int(v))
 
-        self.convs = [ nn.Conv2d(self.num_channels[i], self.num_channels[i+1], 3, padding = 1) for i in range(len(self.num_channels)-1) ]
+        self.convs = [
+            nn.Conv2d(self.num_channels[i], self.num_channels[i + 1], 3, padding=1)
+            for i in range(len(self.num_channels) - 1)
+        ]
         for i, conv in enumerate(self.convs):
             setattr(self, "conv%d" % (i + 1), conv)
 
         self.relu = nn.ReLU() if self._no_leaky_relu() else nn.LeakyReLU(0.1)
 
         if not self._no_bn():
-            self.convs_bn = [ nn.BatchNorm2d(conv.out_channels) for conv in self.convs ]
+            self.convs_bn = [nn.BatchNorm2d(conv.out_channels) for conv in self.convs]
             for i, conv_bn in enumerate(self.convs_bn):
                 setattr(self, "conv%d_bn" % (i + 1), conv_bn)
 
@@ -59,9 +63,7 @@ class MiniRTSNet(Model):
         return getattr(self.args, "disable_leaky_relu", False)
 
     def get_define_args():
-        return [
-            ("arch", "ccpccp;-,64,64,64,-")
-        ]
+        return [("arch", "ccpccp;-,64,64,64,-")]
 
     def forward(self, input):
         # BN and LeakyReLU are from Wendy's code.

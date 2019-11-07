@@ -1,6 +1,6 @@
 # Copyright (c) 2017-present, Facebook, Inc.
 # All rights reserved.
-# 
+#
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
@@ -12,16 +12,19 @@ from rlpytorch import SingleProcessRun, load_env
 
 
 class StatsCollector:
+
     def __init__(self):
-        self.id2seqs_actor = defaultdict(lambda : -1)
-        self.idgseq2action = defaultdict(lambda : -1)
-        self.id2seqs_train = defaultdict(lambda : -1)
+        self.id2seqs_actor = defaultdict(lambda: -1)
+        self.idgseq2action = defaultdict(lambda: -1)
+        self.id2seqs_train = defaultdict(lambda: -1)
 
     def set_params(self, params):
         self.params = params
 
     def _title(self, prompt, sel, t, i):
-        return "[%s][id=%d][batchidx=%d][t=%d][seq=%d][game_counter=%d]: " % (prompt, sel["id"][t][i], i, t, sel["seq"][t][i], sel["game_counter"][t][i])
+        return "[%s][id=%d][batchidx=%d][t=%d][seq=%d][game_counter=%d]: " % (
+            prompt, sel["id"][t][i], i, t, sel["seq"][t][i], sel["game_counter"][t][i]
+        )
 
     def _debug(self, prompt):
         import pdb
@@ -35,11 +38,13 @@ class StatsCollector:
         # import pdb
         # pdb.set_trace()
         # Return random actions.
-        actions = [random.randint(0, self.params["num_action"]-1) for _ in range(batchsize)]
+        actions = [random.randint(0, self.params["num_action"] - 1) for _ in range(batchsize)]
 
         # Check whether id is duplicated.
         ids = set()
-        for i, (id, seq, game_counter, last_terminal, a) in enumerate(zip(b["id"], b["seq"], b["game_counter"], b["last_terminal"], actions)):
+        for i, (id, seq, game_counter, last_terminal, a) in enumerate(
+            zip(b["id"], b["seq"], b["game_counter"], b["last_terminal"], actions)
+        ):
             # print("[%d] actor %d, seq %d" % (i, id, seq))
             prompt = self._title("actor", sel, 0, i)
             if id not in ids:
@@ -83,10 +88,14 @@ class StatsCollector:
                     recorded_a = self.idgseq2action[key]
                     actual_a = sel["a"][t][i]
                     if recorded_a != actual_a:
-                        self._debug("%s Action was different. recorded %d, actual %d" % (prompt, recorded_a, actual_a))
+                        self._debug(
+                            "%s Action was different. recorded %d, actual %d" %
+                            (prompt, recorded_a, actual_a)
+                        )
 
             # Overlapped by 1.
             self.id2seqs_train[id] = last_seq - 1
+
 
 if __name__ == '__main__':
     collector = StatsCollector()

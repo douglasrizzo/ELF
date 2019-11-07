@@ -19,13 +19,15 @@ from datetime import datetime
 # import torch.multiprocessing as _mp
 # mp = _mp.get_context('spawn')
 
+
 class Evaluator:
+
     def __init__(self, name="eval", stats=True, verbose=False, actor_name="actor"):
         """ Initialization for Evaluator. Accepted arguments: ``num_games``, ``batch_size``, ``num_minibatch``
         """
         if stats:
             self.stats = Stats(name)
-            child_providers = [ self.stats.args ]
+            child_providers = [self.stats.args]
         else:
             self.stats = None
             child_providers = []
@@ -34,13 +36,11 @@ class Evaluator:
         self.actor_name = actor_name
         self.verbose = verbose
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
-                ("keys_in_reply", "")
-            ],
-            more_args = ["num_games", "batchsize", "num_minibatch"],
-            on_get_args = self._on_get_args,
-            child_providers = child_providers
+            call_from=self,
+            define_args=[("keys_in_reply", "")],
+            more_args=["num_games", "batchsize", "num_minibatch"],
+            on_get_args=self._on_get_args,
+            child_providers=child_providers
         )
 
     def _on_get_args(self, _):
@@ -119,6 +119,7 @@ class Evaluator:
 
 
 class Trainer:
+
     def __init__(self, verbose=False, actor_name="actor"):
         """ Initialization for Trainer. Accepted arguments: ``num_games``, ``batch_size``
             Also need arguments for `Evaluator` and `ModelSaver` class.
@@ -131,12 +132,12 @@ class Trainer:
         self.counter = MultiCounter(verbose=verbose)
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("freq_update", 1),
             ],
-            more_args = ["num_games", "batchsize"],
-            child_providers = [ self.evaluator.args, self.saver.args ],
+            more_args=["num_games", "batchsize"],
+            child_providers=[self.evaluator.args, self.saver.args],
         )
         self.just_update = False
 

@@ -11,15 +11,16 @@ from rlpytorch import Model, ActorCritic
 
 
 class MiniRTSNet(Model):
+
     def __init__(self, args):
         # this is the place where you instantiate all your modules
         # you can later access them using the same names you've given them in here
         super(MiniRTSNet, self).__init__(args)
         self.m = 2
-        self.conv1 = nn.Conv2d(self.m, self.m, 3, padding = 1)
-        self.conv2 = nn.Conv2d(self.m, self.m, 3, padding = 1)
-        self.conv3 = nn.Conv2d(self.m, self.m, 3, padding = 1)
-        self.conv4 = nn.Conv2d(self.m, self.m, 3, padding = 1)
+        self.conv1 = nn.Conv2d(self.m, self.m, 3, padding=1)
+        self.conv2 = nn.Conv2d(self.m, self.m, 3, padding=1)
+        self.conv3 = nn.Conv2d(self.m, self.m, 3, padding=1)
+        self.conv4 = nn.Conv2d(self.m, self.m, 3, padding=1)
         self.relu = nn.ReLU() if self._no_leaky_relu() else nn.LeakyReLU(0.1)
 
         if not self._no_bn():
@@ -53,12 +54,15 @@ class MiniRTSNet(Model):
         x = h4.view(h4.size(0), -1)
         return x
 
+
 class Model_ActorCritic(Model):
+
     def __init__(self, args):
         super(Model_ActorCritic, self).__init__(args)
 
         params = args.params
-        assert isinstance(params["num_action"], int), "num_action has to be a number. action = " + str(params["num_action"])
+        assert isinstance(params["num_action"], int
+                          ), "num_action has to be a number. action = " + str(params["num_action"])
         self.params = params
         self.net = MiniRTSNet(args)
         linear_in_dim = 800
@@ -84,8 +88,7 @@ class Model_ActorCritic(Model):
         print(res["pi"].exp())
         print(res["V"])
 
+
 # Format: key, [model, method]
 # if method is None, fall back to default mapping from key to method
-Models = {
-    "actor_critic": [Model_ActorCritic, ActorCritic]
-}
+Models = {"actor_critic": [Model_ActorCritic, ActorCritic]}

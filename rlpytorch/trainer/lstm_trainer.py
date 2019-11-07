@@ -16,26 +16,29 @@ from ..utils import HistState
 
 
 class LSTMTrainer:
+
     def __init__(self, verbose=False):
         self.stats = Stats("trainer")
         self.saver = ModelSaver()
         self.counter = MultiCounter()
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("freq_update", 1),
             ],
-            more_args = ["num_games", "batchsize", "T", "gpu"],
-            on_get_args = self._init,
-            child_providers = [ self.saver.args, self.stats.args ],
+            more_args=["num_games", "batchsize", "T", "gpu"],
+            on_get_args=self._init,
+            child_providers=[self.saver.args, self.stats.args],
         )
 
     def _init(self, _):
         # [TODO] Hard coded now, need to fix.
         num_hiddens = 13 * 25
+
         def init_state():
             return torch.FloatTensor(num_hiddens).cuda(self.args.gpu).zero_()
+
         self.hs = HistState(self.args.T, init_state)
         self.stats.reset()
 
@@ -102,5 +105,3 @@ class LSTMTrainer:
         self.rl_method = rl_method
         self.mi = mi
         self.sampler = sampler
-
-

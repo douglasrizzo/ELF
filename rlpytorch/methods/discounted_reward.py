@@ -6,14 +6,16 @@
 
 from ..args_provider import ArgsProvider
 
+
 class DiscountedReward:
+
     def __init__(self):
         """ Initialization discounted_reward.
         Accepted arguments:
         ``discount``: discount factor of reward."""
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("discount", dict(type=float, default=0.99)),
             ],
         )

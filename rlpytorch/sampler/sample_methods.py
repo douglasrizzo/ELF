@@ -26,6 +26,7 @@ def uniform_multinomial(batchsize, num_action, use_cuda=True):
 
     return uniform_p.multinomial(batchsize, replacement=True)
 
+
 def sample_with_check(probs, greedy=False):
     """ multinomial sampling with out of bound check
 
@@ -38,7 +39,7 @@ def sample_with_check(probs, greedy=False):
         _, actions = probs.max(1)
         return actions
     while True:
-        actions = probs.multinomial(1)[:,0]
+        actions = probs.multinomial(1)[:, 0]
         cond1 = (actions < 0).sum()
         cond2 = (actions >= num_action).sum()
         if cond1 == 0 and cond2 == 0:
@@ -55,6 +56,7 @@ def sample_with_check(probs, greedy=False):
         print("#actions = ")
         print(num_action)
         sys.stdout.flush()
+
 
 def sample_eps_with_check(probs, epsilon, greedy=False):
     """ multinomial sampling with out of bound check, with at least ``epsilon`` probability
@@ -83,6 +85,7 @@ def sample_eps_with_check(probs, epsilon, greedy=False):
         actions[rej] = uniform_sampling[rej]
     return actions
 
+
 def sample_multinomial(state_curr, args, node="pi", greedy=False):
     """ multinomial sampling
 
@@ -102,7 +105,7 @@ def sample_multinomial(state_curr, args, node="pi", greedy=False):
         ry = len(probs[0])
         batchsize = probs[0][0].size(0)
 
-        actions = [ np.zeros((rx, ry), dtype='int32') for _ in range(batchsize) ]
+        actions = [np.zeros((rx, ry), dtype='int32') for _ in range(batchsize)]
 
         for i, actionx_prob in enumerate(probs):
             for j, action_prob in enumerate(actionx_prob):
@@ -113,6 +116,7 @@ def sample_multinomial(state_curr, args, node="pi", greedy=False):
     else:
         probs = state_curr[node].data
         return sample_eps_with_check(probs, args.epsilon, greedy=greedy)
+
 
 def epsilon_greedy(state_curr, args, node="pi"):
     """ epsilon greedy sampling
@@ -126,6 +130,7 @@ def epsilon_greedy(state_curr, args, node="pi"):
         A list of actions using epsilon greedy sampling.
     """
     return sample_multinomial(state_curr, args, node=node, greedy=True)
+
 
 def original_distribution(state_curr, node="pi"):
     """ Send original probability as it is.
@@ -141,4 +146,4 @@ def original_distribution(state_curr, node="pi"):
     probs = state_curr[node].data
     batchsize = probs.size(0)
     # Return a list of list.
-    return [ list(probs[i]) for i in range(batchsize) ]
+    return [list(probs[i]) for i in range(batchsize)]

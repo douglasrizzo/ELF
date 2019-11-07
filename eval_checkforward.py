@@ -19,8 +19,9 @@ from rlpytorch.utils import HistState
 def tensor2str(t):
     return ",".join(["%.6f" % ele for ele in t])
 
+
 def merge(t, templ=None):
-    output = defaultdict(lambda : list())
+    output = defaultdict(lambda: list())
     for item in t:
         for k, v in item.items():
             output[k].append(v)
@@ -39,15 +40,17 @@ def merge(t, templ=None):
 
     return output2
 
+
 class ForwardActor:
+
     def __init__(self):
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("delay_T", 5),
                 ("use_delayed_state", dict(action="store_true")),
             ],
-            on_get_args = self._on_get_args
+            on_get_args=self._on_get_args
         )
 
         self.t0 = 0
@@ -75,7 +78,7 @@ class ForwardActor:
         Vs = state_curr["V"].data
         seqs = batch["seq"][0]
 
-        entry = [ dict(a=a, V=V) for a, V in zip(actions, Vs) ]
+        entry = [dict(a=a, V=V) for a, V in zip(actions, Vs)]
 
         self.hs.preprocess(ids, seqs)
         self.hs.feed(ids, entry)
@@ -86,7 +89,6 @@ class ForwardActor:
         # reply_msg["rv"] = mi["actor"].step
         reply_msg["pi"] = None
         return reply_msg
-
 
     def actor(self, batch):
         mi = self.mi
@@ -135,7 +137,12 @@ class ForwardActor:
 if __name__ == '__main__':
     eval_iters = EvalIters()
     forward_actor = ForwardActor()
-    env, args = load_env(os.environ, overrides=dict(actor_only=True), eval_iters=eval_iters, forward_actor=forward_actor)
+    env, args = load_env(
+        os.environ,
+        overrides=dict(actor_only=True),
+        eval_iters=eval_iters,
+        forward_actor=forward_actor
+    )
 
     GC = env["game"].initialize()
 
@@ -154,4 +161,3 @@ if __name__ == '__main__':
     for _ in eval_iters.iters():
         GC.Run()
     GC.Stop()
-

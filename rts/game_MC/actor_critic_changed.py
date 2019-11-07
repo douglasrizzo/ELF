@@ -12,22 +12,23 @@ from rlpytorch import ArgsProvider, PolicyGradient, DiscountedReward, ValueMatch
 
 # Actor critic model.
 class ActorCriticChanged:
+
     def __init__(self):
         self.pg = PolicyGradient()
         self.discounted_reward = DiscountedReward()
         self.value_matcher = ValueMatcher()
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = [
+            call_from=self,
+            define_args=[
                 ("fixed_policy", dict(action="store_true")),
                 ("h_match_policy", dict(action="store_true")),
                 ("h_match_action", dict(action="store_true")),
                 ("h_smooth", dict(action="store_true")),
                 ("contrastive_V", dict(action="store_true")),
             ],
-            more_args = ["num_games", "batchsize", "min_prob"],
-            child_providers = [ self.pg.args, self.discounted_reward.args, self.value_matcher.args ],
+            more_args=["num_games", "batchsize", "min_prob"],
+            child_providers=[self.pg.args, self.discounted_reward.args, self.value_matcher.args],
         )
 
         self.prediction_loss = nn.SmoothL1Loss().cuda()
@@ -59,8 +60,8 @@ class ActorCriticChanged:
             V = state_curr["V"].squeeze()
 
             R = self.discounted_reward.feed(
-                dict(r=batch["r"][t], terminal=batch["terminal"][t]),
-                stats=stats)
+                dict(r=batch["r"][t], terminal=batch["terminal"][t]), stats=stats
+            )
 
             pi = state_curr["pi"]
             policies[t] = pi.data

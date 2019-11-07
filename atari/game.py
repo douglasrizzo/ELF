@@ -24,6 +24,7 @@ from rlpytorch import ArgsProvider
 
 
 class Loader:
+
     def __init__(self):
         self.context_args = ContextArgs()
 
@@ -36,16 +37,20 @@ class Loader:
                 ("actor_only", dict(action="store_true")),
                 ("reward_clip", 1),
                 ("rom_dir", os.path.dirname(__file__)),
-                ("additional_labels", dict(
-                    type=str,
-                    default=None,
-                    help="Add additional labels in the batch."
-                    " E.g., id,seq,last_terminal",
-                )),
+                (
+                    "additional_labels",
+                    dict(
+                        type=str,
+                        default=None,
+                        help="Add additional labels in the batch."
+                        " E.g., id,seq,last_terminal",
+                    )
+                ),
                 ("gpu", dict(type=int, default=None)),
             ],
             more_args=["batchsize", "T", "env_eval_only"],
-            child_providers=[self.context_args.args])
+            child_providers=[self.context_args.args]
+        )
 
     def initialize(self):
         args = self.args
@@ -66,10 +71,14 @@ class Loader:
         params = GC.GetParams()
         print("Num Actions: ", params["num_action"])
 
-        desc = {"actor": dict(
-            batchsize=args.batchsize,
-            input=dict(T=1, keys={"s", "last_r", "last_terminal"}),
-            reply=dict(T=1, keys={"rv", "pi", "V", "a"}))}
+        desc = {
+            "actor":
+            dict(
+                batchsize=args.batchsize,
+                input=dict(T=1, keys={"s", "last_r", "last_terminal"}),
+                reply=dict(T=1, keys={"rv", "pi", "V", "a"})
+            )
+        }
         # For actor model, No reward needed, we only want to get input
         # and return distribution of actions.
         # sampled action and and value will be filled from the reply.
@@ -82,8 +91,10 @@ class Loader:
                 batchsize=args.batchsize,
                 input=dict(
                     T=args.T,
-                    keys={"rv", "id", "pi", "s", "a", "last_r", "V", "seq", "last_terminal"}),
-                reply=None)
+                    keys={"rv", "id", "pi", "s", "a", "last_r", "V", "seq", "last_terminal"}
+                ),
+                reply=None
+            )
 
         if args.additional_labels is not None:
             extra = args.additional_labels.split(",")
@@ -99,8 +110,7 @@ class Loader:
         params["hist_len"] = args.hist_len
         params["T"] = args.T
 
-        return GCWrapper(
-            GC, co, desc, gpu=args.gpu, use_numpy=False, params=params)
+        return GCWrapper(GC, co, desc, gpu=args.gpu, use_numpy=False, params=params)
 
 
 cmd_line = \
@@ -128,10 +138,7 @@ if __name__ == '__main__':
         global actor_count, GC
         actor_count += 1
         batchsize = batch["s"].size(1)
-        actions = [
-            random.randint(0, GC.params["num_action"] - 1)
-            for _ in range(batchsize)
-        ]
+        actions = [random.randint(0, GC.params["num_action"] - 1) for _ in range(batchsize)]
         reply = dict(a=actions)
         '''
         data = batch.to_numpy()
@@ -167,8 +174,7 @@ if __name__ == '__main__':
 
     print(reward_dist)
     elapsed = (datetime.now() - before).total_seconds() * 1000
-    print("elapsed = %.4lf ms, elapsed_wait_only = %.4lf" %
-          (elapsed, elapsed_wait_only))
+    print("elapsed = %.4lf ms, elapsed_wait_only = %.4lf" % (elapsed, elapsed_wait_only))
     GC.PrintSummary()
     GC.Stop()
 
@@ -183,7 +189,9 @@ if __name__ == '__main__':
 
     print(
         "Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" %
-        (per_loop, per_frame_loop_n_cpu, fps_loop))
+        (per_loop, per_frame_loop_n_cpu, fps_loop)
+    )
     print(
         "Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" %
-        (per_wait, per_frame_wait_n_cpu, fps_wait))
+        (per_wait, per_frame_wait_n_cpu, fps_wait)
+    )

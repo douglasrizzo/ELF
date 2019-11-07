@@ -14,7 +14,9 @@ from rlpytorch import LSTMTrainer, EvalIters, load_env, ModelInterface
 if __name__ == '__main__':
     trainer = LSTMTrainer()
     eval_iters = EvalIters()
-    env, all_args = load_env(os.environ, overrides=dict(actor_only=True), trainer=trainer, eval_iters=eval_iters)
+    env, all_args = load_env(
+        os.environ, overrides=dict(actor_only=True), trainer=trainer, eval_iters=eval_iters
+    )
 
     GC = env["game"].initialize()
 

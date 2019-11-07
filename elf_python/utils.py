@@ -11,17 +11,21 @@ import msgpack_numpy
 
 msgpack_numpy.patch()
 
+
 def dumps(obj):
     return msgpack.dumps(obj, use_bin_type=True)
 
+
 def loads(buf):
     return msgpack.loads(buf)
+
 
 def check_done_flag(done_flag):
     if done_flag is not None:
         with done_flag.get_lock():
             return done_flag.value
     return False
+
 
 def queue_get(q, done_flag=None, fail_comment=None):
     if done_flag is None:
@@ -37,6 +41,7 @@ def queue_get(q, done_flag=None, fail_comment=None):
                 done = True
     # Return
     return None
+
 
 def queue_put(q, item, done_flag=None, fail_comment=None):
     if done_flag is None:

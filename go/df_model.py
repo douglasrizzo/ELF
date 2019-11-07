@@ -5,6 +5,7 @@ from rlpytorch import Model
 
 
 class Model_Policy(Model):
+
     def __init__(self, args):
         super(Model_Policy, self).__init__(args)
 
@@ -39,10 +40,8 @@ class Model_Policy(Model):
 
     def get_define_args():
         return [
-            ("no_bn", dict(action="store_true")),
-            ("no_leaky_relu", dict(action="store_true")),
-            ("num_layer", 39),
-            ("dim", 128)
+            ("no_bn", dict(action="store_true")), ("no_leaky_relu", dict(action="store_true")),
+            ("num_layer", 39), ("dim", 128)
         ]
 
     def forward(self, x):
@@ -55,10 +54,9 @@ class Model_Policy(Model):
         pis = []
         d = self.board_size * self.board_size
         for i in range(self.num_future_actions):
-            pis.append(self.softmax(output[:,i].contiguous().view(-1, d)))
+            pis.append(self.softmax(output[:, i].contiguous().view(-1, d)))
         return dict(pis=pis, pi=pis[0])
 
+
 # Format: key, [model, method]
-Models = {
-    "df_policy" : [Model_Policy, MultiplePrediction]
-}
+Models = {"df_policy": [Model_Policy, MultiplePrediction]}

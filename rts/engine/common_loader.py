@@ -12,6 +12,7 @@ from rlpytorch import ArgsProvider
 
 
 class CommonLoader:
+
     def __init__(self, module):
         self.context_args = ContextArgs()
         self.more_labels = MoreLabels()
@@ -19,14 +20,20 @@ class CommonLoader:
 
         basic_define_args = [
             ("handicap_level", 0),
-            ("players", dict(type=str, help=";-separated player infos. For example: type=AI_NN,fs=50,args=backup/AI_SIMPLE|decay/0.99|start/1000,fow=True;type=AI_SIMPLE,fs=50")),
+            (
+                "players",
+                dict(
+                    type=str,
+                    help=";-separated player infos. For example: type=AI_NN,fs=50,args=backup/AI_SIMPLE|decay/0.99|start/1000,fow=True;type=AI_SIMPLE,fs=50"
+                )
+            ),
             ("max_tick", dict(type=int, default=30000, help="Maximal tick")),
             ("shuffle_player", dict(action="store_true")),
             ("num_frames_in_state", 1),
             ("max_unit_cmd", 1),
             ("seed", 0),
             ("actor_only", dict(action="store_true")),
-            ("model_no_spatial", dict(action="store_true")), # TODO, put it to model
+            ("model_no_spatial", dict(action="store_true")),  # TODO, put it to model
             ("save_replay_prefix", dict(type=str, default=None)),
             ("output_file", dict(type=str, default=None)),
             ("cmd_dumper_prefix", dict(type=str, default=None)),
@@ -34,10 +41,10 @@ class CommonLoader:
         ]
 
         self.args = ArgsProvider(
-            call_from = self,
-            define_args = basic_define_args + self._define_args(),
-            more_args = ["num_games", "batchsize", "T"],
-            child_providers = [ self.context_args.args, self.more_labels.args ]
+            call_from=self,
+            define_args=basic_define_args + self._define_args(),
+            more_args=["num_games", "batchsize", "T"],
+            child_providers=[self.context_args.args, self.more_labels.args]
         )
 
     def _set_key(self, ai_options, key, value):
@@ -155,13 +162,15 @@ class CommonLoader:
 
         self.more_labels.add_labels(desc)
 
-        params.update(dict(
-            num_group = 1 if args.actor_only else 2,
-            action_batchsize = int(desc["actor"]["batchsize"]),
-            train_batchsize = int(desc["train"]["batchsize"]) if not args.actor_only else None,
-            T = args.T,
-            model_no_spatial = args.model_no_spatial
-        ))
+        params.update(
+            dict(
+                num_group=1 if args.actor_only else 2,
+                action_batchsize=int(desc["actor"]["batchsize"]),
+                train_batchsize=int(desc["train"]["batchsize"]) if not args.actor_only else None,
+                T=args.T,
+                model_no_spatial=args.model_no_spatial
+            )
+        )
 
         return GCWrapper(GC, co, desc, gpu=args.gpu, use_numpy=False, params=params)
 
@@ -186,13 +195,15 @@ class CommonLoader:
 
         self.more_labels.add_labels(desc)
 
-        params.update(dict(
-            num_group = 1 if args.actor_only else 2,
-            action_batchsize = int(desc["actor0"]["batchsize"]),
-            train_batchsize = int(desc["train1"]["batchsize"]) if not args.actor_only else None,
-            T = args.T,
-            model_no_spatial = args.model_no_spatial
-        ))
+        params.update(
+            dict(
+                num_group=1 if args.actor_only else 2,
+                action_batchsize=int(desc["actor0"]["batchsize"]),
+                train_batchsize=int(desc["train1"]["batchsize"]) if not args.actor_only else None,
+                T=args.T,
+                model_no_spatial=args.model_no_spatial
+            )
+        )
 
         return GCWrapper(GC, co, desc, gpu=args.gpu, use_numpy=False, params=params)
 
@@ -203,8 +214,11 @@ class CommonLoader:
         train_name = "train"
         co, GC, params = self._init_gc(player_names=[train_name, reference_name])
 
-        desc = {"reduced_project": self._get_reduced_project(), "reduced_forward": self._get_reduced_forward(),
-                "reduced_predict": self._get_reduced_predict()}
+        desc = {
+            "reduced_project": self._get_reduced_project(),
+            "reduced_forward": self._get_reduced_forward(),
+            "reduced_predict": self._get_reduced_predict()
+        }
         # For actor model, no reward needed, we only want to get input and return distribution of actions.
         # sampled action and and value will be filled from the reply.
         if params["players"][1]["type"] == "AI_NN":
@@ -215,4 +229,3 @@ class CommonLoader:
         self.more_labels.add_labels(desc)
 
         return GCWrapper(GC, co, desc, gpu=args.gpu, use_numpy=False, params=params)
-

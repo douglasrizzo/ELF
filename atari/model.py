@@ -10,34 +10,32 @@ from rlpytorch import Model, ActorCritic
 
 
 class Model_ActorCritic(Model):
+
     def __init__(self, args):
         super(Model_ActorCritic, self).__init__(args)
 
         params = args.params
 
         self.linear_dim = 1920
-        relu_func = lambda : nn.LeakyReLU(0.1)
+        relu_func = lambda: nn.LeakyReLU(0.1)
         # relu_func = nn.ReLU
 
         self.trunk = nn.Sequential(
-            nn.Conv2d(3 * params["hist_len"], 32, 5, padding = 2),
+            nn.Conv2d(3 * params["hist_len"], 32, 5, padding=2),
             relu_func(),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(32, 32, 5, padding = 2),
+            nn.Conv2d(32, 32, 5, padding=2),
             relu_func(),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(32, 64, 3, padding = 1),
+            nn.Conv2d(32, 64, 3, padding=1),
             relu_func(),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 64, 3, padding = 1),
+            nn.Conv2d(64, 64, 3, padding=1),
             relu_func(),
             nn.MaxPool2d(2, 2),
         )
 
-        self.conv2fc = nn.Sequential(
-            nn.Linear(self.linear_dim, 512),
-            nn.PReLU()
-        )
+        self.conv2fc = nn.Sequential(nn.Linear(self.linear_dim, 512), nn.PReLU())
 
         self.policy_branch = nn.Linear(512, params["num_action"])
         self.value_branch = nn.Linear(512, 1)
@@ -54,7 +52,6 @@ class Model_ActorCritic(Model):
         value = self.value_branch(rep)
         return dict(pi=policy, V=value)
 
+
 # Format: key, [model, method]
-Models = {
-    "actor_critic" : [Model_ActorCritic, ActorCritic]
-}
+Models = {"actor_critic": [Model_ActorCritic, ActorCritic]}

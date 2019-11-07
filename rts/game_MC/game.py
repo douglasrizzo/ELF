@@ -14,7 +14,9 @@ sys.path.append('../../')
 from rts.engine import CommonLoader
 from rlpytorch import ArgsProvider
 
+
 class Loader(CommonLoader):
+
     def __init__(self):
         super(Loader, self).__init__(minirts)
 
@@ -23,8 +25,7 @@ class Loader(CommonLoader):
             ("use_unit_action", dict(action="store_true")),
             ("disable_time_decay", dict(action="store_true")),
             ("use_prev_units", dict(action="store_true")),
-            ("attach_complete_info", dict(action="store_true")),
-            ("feature_type", "ORIGINAL")
+            ("attach_complete_info", dict(action="store_true")), ("feature_type", "ORIGINAL")
         ]
 
     def _on_gc(self, GC):
@@ -87,6 +88,7 @@ class Loader(CommonLoader):
             name="reduced_project"
         )
 
+
 nIter = 5000
 elapsed_wait_only = 0
 
@@ -108,7 +110,7 @@ if __name__ == '__main__':
         pdb.set_trace()
         pickle.dump(utils_elf.to_numpy(sel), open("tmp%d.bin" % k, "wb"), protocol=2)
         """
-        return dict(a=[0]*batch["s"].size(1))
+        return dict(a=[0] * batch["s"].size(1))
 
     def reduced_predict():
         global cnt_predict
@@ -158,5 +160,11 @@ if __name__ == '__main__':
     fps_loop = 1000 / per_frame_loop_n_cpu * args.frame_skip
     fps_wait = 1000 / per_frame_wait_n_cpu * args.frame_skip
 
-    print("Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" % (per_loop, per_frame_loop_n_cpu, fps_loop))
-    print("Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" % (per_wait, per_frame_wait_n_cpu, fps_wait))
+    print(
+        "Time[Loop]: %.6lf ms / loop, %.6lf ms / frame_loop_n_cpu, %.2f FPS" %
+        (per_loop, per_frame_loop_n_cpu, fps_loop)
+    )
+    print(
+        "Time[Wait]: %.6lf ms / wait, %.6lf ms / frame_wait_n_cpu, %.2f FPS" %
+        (per_wait, per_frame_wait_n_cpu, fps_wait)
+    )

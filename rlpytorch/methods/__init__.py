@@ -11,4 +11,3 @@ from .q_learning import Q_learning
 from .rnn_actor_critic import RNNActorCritic
 from .utils import add_err
 from .value_matcher import ValueMatcher
-

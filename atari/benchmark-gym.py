@@ -23,6 +23,7 @@ from tensorpack.utils.concurrency import ensure_proc_terminate
 
 ALELOCK = threading.Lock()
 
+
 def bench_proc():
     Q = mp.Queue()
 
@@ -38,6 +39,7 @@ def bench_proc():
             Q.put([ob, r])
             if isOver:
                 player.reset()
+
     nr_proc = 8
     procs = [mp.Process(target=work) for _ in range(nr_proc)]
     ensure_proc_terminate(procs)
@@ -47,11 +49,12 @@ def bench_proc():
     for _ in tqdm.trange(100000):
         Q.get()
 
+
 def bench_thread(ngame):
     Niter = 80000 * (ngame // 64)
     Q = queue.Queue(maxsize=Niter + 10000)
     nr_proc = ngame
-    barrier = threading.Barrier(nr_proc+ 1)
+    barrier = threading.Barrier(nr_proc + 1)
 
     evt = threading.Event()
 
@@ -69,6 +72,7 @@ def bench_thread(ngame):
             Q.put([ob, r])
             if isOver:
                 player.reset()
+
     procs = [threading.Thread(target=work, daemon=True) for _ in range(nr_proc)]
     for p in procs:
         p.start()
@@ -82,6 +86,7 @@ def bench_thread(ngame):
     evt.set()
     print("NGame={}, FPS={}".format(ngame, fps))
     return fps
+
 
 if __name__ == '__main__':
     ngame = int(sys.argv[1])

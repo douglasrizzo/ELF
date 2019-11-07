@@ -5,6 +5,7 @@ from rlpytorch import Model
 
 
 class Model_PolicyValue(Model):
+
     def __init__(self, args):
         super(Model_PolicyValue, self).__init__(args)
 
@@ -38,7 +39,7 @@ class Model_PolicyValue(Model):
         self.pi_final_conv = self._conv_layer(self.dim, 2, 1)
         self.value_final_conv = self._conv_layer(self.dim, 1, 1)
 
-        d = self.board_size ** 2
+        d = self.board_size**2
         self.pi_linear = nn.Linear(d * 2, d)
         self.value_linear1 = nn.Linear(d, 256)
         self.value_linear2 = nn.Linear(256, 1)
@@ -64,10 +65,8 @@ class Model_PolicyValue(Model):
 
     def get_define_args():
         return [
-            ("no_bn", dict(action="store_true")),
-            ("no_leaky_relu", dict(action="store_true")),
-            ("num_block", 20),
-            ("dim", 128)
+            ("no_bn", dict(action="store_true")), ("no_leaky_relu", dict(action="store_true")),
+            ("num_block", 20), ("dim", 128)
         ]
 
     def forward(self, x):
@@ -80,7 +79,7 @@ class Model_PolicyValue(Model):
             s1 = s1 + s
             s = self.relu(s1)
 
-        d = self.board_size ** 2
+        d = self.board_size**2
 
         pi = self.pi_final_conv(s)
         pi = self.pi_linear(pi.view(-1, d * 2))
@@ -93,7 +92,6 @@ class Model_PolicyValue(Model):
 
         return dict(pi=pi, V=V)
 
+
 # Format: key, [model, method]
-Models = {
-    "df" : [Model_PolicyValue, MultiplePrediction]
-}
+Models = {"df": [Model_PolicyValue, MultiplePrediction]}
