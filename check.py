@@ -43,7 +43,7 @@ class StatsCollector:
         # Check whether id is duplicated.
         ids = set()
         for i, (id, seq, game_counter, last_terminal, a) in enumerate(
-            zip(b["id"], b["seq"], b["game_counter"], b["last_terminal"], actions)
+                zip(b["id"], b["seq"], b["game_counter"], b["last_terminal"], actions)
         ):
             # print("[%d] actor %d, seq %d" % (i, id, seq))
             prompt = self._title("actor", sel, 0, i)

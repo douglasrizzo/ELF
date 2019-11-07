@@ -31,14 +31,14 @@ class MultiProcessRun:
         )
 
     def setup(
-        self,
-        GC,
-        mi,
-        remote_init,
-        remote_process,
-        episode_start=None,
-        episode_summary=None,
-        args=None
+            self,
+            GC,
+            mi,
+            remote_init,
+            remote_process,
+            episode_start=None,
+            episode_summary=None,
+            args=None
     ):
         """ Setup for MultiProcessRun.
 
@@ -86,8 +86,10 @@ class MultiProcessRun:
         for k in range(args.num_episode):
             if self.episode_start is not None:
                 self.episode_start(k)
-            if args.tqdm: iterator = tqdm.trange(args.num_minibatch, ncols=50)
-            else: iterator = range(args.num_minibatch)
+            if args.tqdm:
+                iterator = tqdm.trange(args.num_minibatch, ncols=50)
+            else:
+                iterator = range(args.num_minibatch)
 
             for _ in iterator:
                 self.GC.Run()

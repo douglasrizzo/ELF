@@ -143,6 +143,7 @@ if __name__ == '__main__':
     GC = loader.initialize()
 
     import torch
+
     nbin = 10
     board_size = GC["params"]["board_size"]
     stats = torch.FloatTensor(nbin, board_size, board_size)
@@ -152,6 +153,7 @@ if __name__ == '__main__':
 
     our_idx = GC.params["our_stone_plane"]
     opp_idx = GC.params["opponent_stone_plane"]
+
 
     def train(batch):
         # Collect statistics.
@@ -164,6 +166,7 @@ if __name__ == '__main__':
             stats[bin_idx, :, :] += s[opp_idx, :, :]
             counts[bin_idx] += 1
 
+
     GC.reg_callback("train", train)
 
     reward_dist = Counter()
@@ -172,6 +175,7 @@ if __name__ == '__main__':
     GC.Start()
 
     import tqdm
+
     for _ in tqdm.trange(args.num_iter):
         b = datetime.now()
         GC.Run()

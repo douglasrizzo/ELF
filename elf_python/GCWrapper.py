@@ -24,7 +24,8 @@ class Collector:
         # XXX Not a good design to put replier into memory_receiver.
         # For now let it go.
         self.memory_receiver = \
-            MemoryReceiver(name, self.receiver, self.assembler, batch_queue, allow_incomplete_batch=False, replier=self.replier)
+            MemoryReceiver(name, self.receiver, self.assembler, batch_queue, allow_incomplete_batch=False,
+                           replier=self.replier)
 
 
 class GCWrapper:

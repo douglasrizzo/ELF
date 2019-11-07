@@ -4,7 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 # File: benchmark-atari.py
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
@@ -34,7 +34,7 @@ def benchmark(ngame):
 
     for k in range(Niter):
         infos = GC.Wait(0)
-        #for i in range(len(infos)):
+        # for i in range(len(infos)):
         #    stats[infos[i].meta().id] += 1
         GC.Steps(infos)
     print(stats)

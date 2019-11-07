@@ -10,6 +10,7 @@ import torch
 import tqdm
 
 from elf_python import GCWrapper, Simulator
+
 '''Minimal example that uses the Python version of concurrent environment from ELF'''
 
 

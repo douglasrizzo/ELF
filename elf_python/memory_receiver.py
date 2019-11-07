@@ -56,7 +56,7 @@ def _initialize_batch_cpu(batch_cpu, batch_gpu, k, v, batchsize, use_cuda=True):
     if isinstance(entry, np.ndarray):
         shape = entry.shape
     elif isinstance(entry, list):
-        shape = (len(entry), )
+        shape = (len(entry),)
     else:
         shape = entry.size()
 
@@ -303,16 +303,16 @@ def ZMQDecoder(receive_data):
 class MemoryReceiver:
 
     def __init__(
-        self,
-        name,
-        ch,
-        batch_assembler,
-        batch_queue,
-        prompt=None,
-        decoder=ZMQDecoder,
-        allow_incomplete_batch=False,
-        seq_limits=None,
-        replier=None
+            self,
+            name,
+            ch,
+            batch_assembler,
+            batch_queue,
+            prompt=None,
+            decoder=ZMQDecoder,
+            allow_incomplete_batch=False,
+            seq_limits=None,
+            replier=None
     ):
         self.name = name
         self.ch = ch
@@ -385,11 +385,15 @@ class MemoryReceiver:
                 m = self.decoder(raw_data)
             if isinstance(m, str):
                 # No package for now, send existing data if there is any.
-                if m == 'nopackage': return []
-                else: return None
+                if m == 'nopackage':
+                    return []
+                else:
+                    return None
         else:
-            if raw_data is None: return []
-            else: m = raw_data
+            if raw_data is None:
+                return []
+            else:
+                m = raw_data
 
         # Send to multiple threads for batch.
         ret = []

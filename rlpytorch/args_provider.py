@@ -49,8 +49,10 @@ class Args:
         """ Print args """
 
         def stringify(x):
-            if isinstance(x, str): return "\"" + x + "\""
-            else: return str(x)
+            if isinstance(x, str):
+                return "\"" + x + "\""
+            else:
+                return str(x)
 
         print("========== Args ============")
         for group_name, options in self._args_options:
@@ -74,13 +76,13 @@ class Args:
 class ArgsProvider:
 
     def __init__(
-        self,
-        define_args=[],
-        more_args=[],
-        on_get_args=None,
-        call_from=None,
-        child_providers=[],
-        child_transforms=None
+            self,
+            define_args=[],
+            more_args=[],
+            on_get_args=None,
+            call_from=None,
+            child_providers=[],
+            child_transforms=None
     ):
         """Define arguments to be loaded from the command line. Example usage
         ::
@@ -125,8 +127,8 @@ class ArgsProvider:
             self._arg_keys = list(list(zip(*self._define_args))[0])
         self._child_providers = child_providers
         self._child_transforms = child_transforms if child_transforms is not None else [
-            None
-        ] * len(child_providers)
+                                                                                           None
+                                                                                       ] * len(child_providers)
         self._call_from = call_from
 
     def get_define_keys(self):
@@ -207,11 +209,11 @@ class ArgsProvider:
 
     @staticmethod
     def Load(
-        parser,
-        args_providers,
-        cmd_line=sys.argv[1:],
-        global_defaults=dict(),
-        global_overrides=dict()
+            parser,
+            args_providers,
+            cmd_line=sys.argv[1:],
+            global_defaults=dict(),
+            global_overrides=dict()
     ):
         """Load args from ``cmd_line``
 

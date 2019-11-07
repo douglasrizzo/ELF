@@ -12,6 +12,7 @@ import torch.optim
 
 from .args_provider import ArgsProvider
 
+
 # All model must provide .outputs and .preprocess
 # E.g., .outputs = { "Q" : self.final_linear_layer }
 #       .preprocess = lambda self, x: downsample(x)
@@ -112,7 +113,8 @@ class ModelInterface:
 
             if params["opt_method"] == "adam":
                 self.optimizers[key] = \
-                        torch.optim.Adam(curr_model.parameters(), lr = params["lr"], betas = (0.9, 0.999), eps=params["adam_eps"])
+                    torch.optim.Adam(curr_model.parameters(), lr=params["lr"], betas=(0.9, 0.999),
+                                     eps=params["adam_eps"])
             else:
                 raise ValueError("Optimization method %s is not supported! " % params["opt_method"])
 

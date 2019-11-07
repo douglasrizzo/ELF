@@ -52,8 +52,10 @@ class SingleProcessRun:
         for k in range(args.num_episode):
             if self.episode_start is not None:
                 self.episode_start(k)
-            if args.tqdm: iterator = tqdm.trange(args.num_minibatch, ncols=50)
-            else: iterator = range(args.num_minibatch)
+            if args.tqdm:
+                iterator = tqdm.trange(args.num_minibatch, ncols=50)
+            else:
+                iterator = range(args.num_minibatch)
 
             for _ in iterator:
                 self.GC.Run()

@@ -4,7 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
@@ -35,13 +35,16 @@ if __name__ == '__main__':
     GC.reg_callback("actor1", trainer.actor)
     GC.reg_callback("actor0", evaluator.actor)
 
+
     def summary(i):
         trainer.episode_summary(i)
         evaluator.episode_summary()
 
+
     def start(i):
         trainer.episode_start(i)
         evaluator.episode_start()
+
 
     runner.setup(GC, episode_summary=summary, episode_start=start)
     runner.run()

@@ -4,7 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
@@ -32,13 +32,16 @@ if __name__ == '__main__':
         e.setup(sampler=env["sampler"], mi=mi)
         GC.reg_callback("actor%d" % i, e.actor)
 
+
     def summary(i):
         for e in evaluators:
             e.episode_summary()
 
+
     def start(i):
         for e in evaluators:
             e.episode_start()
+
 
     runner.setup(GC, episode_summary=summary, episode_start=start)
     runner.run()

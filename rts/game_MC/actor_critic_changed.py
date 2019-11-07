@@ -115,7 +115,7 @@ class ActorCriticChanged:
 
             if overall_err is not None:
                 stats["cost"].feed(overall_err.data[0])
-            #print("[%d]: reward=%.4f, sum_reward=%.2f, acc_reward=%.4f, value_err=%.4f, policy_err=%.4f" % (i, r.mean(), r.sum(), R.mean(), value_err.data[0], policy_err.data[0]))
+            # print("[%d]: reward=%.4f, sum_reward=%.2f, acc_reward=%.4f, value_err=%.4f, policy_err=%.4f" % (i, r.mean(), r.sum(), R.mean(), value_err.data[0], policy_err.data[0]))
 
         if args.h_match_policy or args.h_match_action:
             state_curr = m.forward(batch.hist(0))

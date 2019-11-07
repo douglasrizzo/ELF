@@ -19,6 +19,7 @@ from .size_utils import total_size
 
 import msgpack
 import msgpack_numpy
+
 msgpack_numpy.patch()
 
 
@@ -194,8 +195,9 @@ class DelayedStats:
 
             # Save it
             history = self.predicted_entries[delay][key]
-            history.update({ str(t + delay) + "_" + str(d) : self.entries[key][str(t) + "_" + str(d)] + (v[i] if not diff_cb else diff_cb(v[i])) \
-                    for i, (t, d) in enumerate(zip(ts, ids)) })
+            history.update({str(t + delay) + "_" + str(d): self.entries[key][str(t) + "_" + str(d)] + (
+                v[i] if not diff_cb else diff_cb(v[i])) \
+                            for i, (t, d) in enumerate(zip(ts, ids))})
 
             history2 = self.baseline_entries[delay][key]
             history2.update(
@@ -212,7 +214,7 @@ class DelayedStats:
         for t_id, v1 in h1.items():
             if not (t_id in h2): continue
             v2 = h2[t_id]
-            summation += (v1 - v2)**2
+            summation += (v1 - v2) ** 2
             counter += 1
         return summation / (counter + 1e-8), counter
 
@@ -313,11 +315,11 @@ class ForwardTracker:
                 cp = pred[t0]
                 # Also compute th error.
                 for delay, p in enumerate(cp["pred"]):
-                    self.sum_sqr_err[k][2 * delay] += (p - v)**2
+                    self.sum_sqr_err[k][2 * delay] += (p - v) ** 2
                     self.sum_sqr_err[k][2 * delay + 1] += 1
 
                 for delay, p in enumerate(cp["baseline"]):
-                    self.sum_sqr_err_bl[k][2 * delay] += (p - v)**2
+                    self.sum_sqr_err_bl[k][2 * delay] += (p - v) ** 2
                     self.sum_sqr_err_bl[k][2 * delay + 1] += 1
 
                 additional_info[k + "_pred"] = ", ".join(
@@ -345,10 +347,10 @@ class ForwardTracker:
             for k, v in used_fd_info.items()
         }
 
-        #print("--------------")
-        #print_dict2("[statistics]:", self.sum_sqr_err, self.sum_sqr_err_bl, func=get_avg_str2)
-        #print_dict("[batch after _make_batch]: ", batch_info)
-        #print_dict("[state_curr after forward]: ", used_fd_info)
+        # print("--------------")
+        # print_dict2("[statistics]:", self.sum_sqr_err, self.sum_sqr_err_bl, func=get_avg_str2)
+        # print_dict("[batch after _make_batch]: ", batch_info)
+        # print_dict("[state_curr after forward]: ", used_fd_info)
 
 
 class SeqStats:
@@ -444,7 +446,6 @@ def print_binary(m):
 
 
 def get_total_size(o):
-
     def get_tensor_size(t):
         return t.numel() * t.element_size()
 

@@ -27,6 +27,7 @@ if __name__ == '__main__':
     total_batchsize = 0
     total_sel_batchsize = 0
 
+
     def actor(batch):
         global total_batchsize, total_sel_batchsize
         reply = evaluator.actor(batch)
@@ -45,6 +46,7 @@ if __name__ == '__main__':
         # import pdb
         # pdb.set_trace()
         return reply
+
 
     GC.reg_callback_if_exists("actor", actor)
 

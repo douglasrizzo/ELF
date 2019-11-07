@@ -39,7 +39,7 @@ class Model_PolicyValue(Model):
         self.pi_final_conv = self._conv_layer(self.dim, 2, 1)
         self.value_final_conv = self._conv_layer(self.dim, 1, 1)
 
-        d = self.board_size**2
+        d = self.board_size ** 2
         self.pi_linear = nn.Linear(d * 2, d)
         self.value_linear1 = nn.Linear(d, 256)
         self.value_linear2 = nn.Linear(256, 1)
@@ -79,7 +79,7 @@ class Model_PolicyValue(Model):
             s1 = s1 + s
             s = self.relu(s1)
 
-        d = self.board_size**2
+        d = self.board_size ** 2
 
         pi = self.pi_final_conv(s)
         pi = self.pi_linear(pi.view(-1, d * 2))

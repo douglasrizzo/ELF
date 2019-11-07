@@ -4,7 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 # File: game.py
 
@@ -43,7 +43,7 @@ class Loader:
                         type=str,
                         default=None,
                         help="Add additional labels in the batch."
-                        " E.g., id,seq,last_terminal",
+                             " E.g., id,seq,last_terminal",
                     )
                 ),
                 ("gpu", dict(type=int, default=None)),
@@ -73,11 +73,11 @@ class Loader:
 
         desc = {
             "actor":
-            dict(
-                batchsize=args.batchsize,
-                input=dict(T=1, keys={"s", "last_r", "last_terminal"}),
-                reply=dict(T=1, keys={"rv", "pi", "V", "a"})
-            )
+                dict(
+                    batchsize=args.batchsize,
+                    input=dict(T=1, keys={"s", "last_r", "last_terminal"}),
+                    reply=dict(T=1, keys={"rv", "pi", "V", "a"})
+                )
         }
         # For actor model, No reward needed, we only want to get input
         # and return distribution of actions.
@@ -134,6 +134,7 @@ if __name__ == '__main__':
     actor_count = 0
     train_count = 0
 
+
     def actor(batch):
         global actor_count, GC
         actor_count += 1
@@ -148,6 +149,7 @@ if __name__ == '__main__':
         '''
         return reply
 
+
     def train():
         global train_count
         # pickle.dump(
@@ -155,6 +157,7 @@ if __name__ == '__main__':
         #     open("tmp-train%d.bin" % train_count, "wb"),
         #     protocol=2, )
         train_count += 1
+
 
     GC.reg_callback("actor", actor)
     GC.reg_callback("train", train)
@@ -165,6 +168,7 @@ if __name__ == '__main__':
     GC.Start()
 
     import tqdm
+
     for _ in tqdm.trange(nIter):
         b = datetime.now()
         # Before wait

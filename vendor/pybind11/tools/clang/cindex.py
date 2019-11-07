@@ -1,11 +1,11 @@
-#===- cindex.py - Python Indexing Library Bindings -----------*- python -*--===#
+# ===- cindex.py - Python Indexing Library Bindings -----------*- python -*--===#
 #
 #                     The LLVM Compiler Infrastructure
 #
 # This file is distributed under the University of Illinois Open Source
 # License. See LICENSE.TXT for details.
 #
-#===------------------------------------------------------------------------===#
+# ===------------------------------------------------------------------------===#
 r"""
 Clang Indexing Library Bindings
 ===============================
@@ -73,6 +73,7 @@ import clang.enumerations
 c_object_p = POINTER(c_void_p)
 
 callbacks = {}
+
 
 ### Exception Classes ###
 
@@ -497,7 +498,7 @@ class TokenKind(object):
         self.name = name
 
     def __repr__(self):
-        return 'TokenKind.%s' % (self.name, )
+        return 'TokenKind.%s' % (self.name,)
 
     @staticmethod
     def from_value(value):
@@ -623,7 +624,7 @@ class CursorKind(BaseEnumeration):
         return conf.lib.clang_isUnexposed(self)
 
     def __repr__(self):
-        return 'CursorKind.%s' % (self.name, )
+        return 'CursorKind.%s' % (self.name,)
 
 
 ###
@@ -1295,6 +1296,7 @@ TemplateArgumentKind.DECLARATION = TemplateArgumentKind(2)
 TemplateArgumentKind.NULLPTR = TemplateArgumentKind(3)
 TemplateArgumentKind.INTEGRAL = TemplateArgumentKind(4)
 
+
 ### Cursors ###
 
 
@@ -1525,7 +1527,7 @@ class Cursor(Structure):
         if not hasattr(self, '_underlying_type'):
             assert self.kind.is_declaration()
             self._underlying_type = \
-              conf.lib.clang_getTypedefDeclUnderlyingType(self)
+                conf.lib.clang_getTypedefDeclUnderlyingType(self)
 
         return self._underlying_type
 
@@ -1553,11 +1555,11 @@ class Cursor(Structure):
             if underlying_type.kind == TypeKind.ENUM:
                 underlying_type = underlying_type.get_declaration().enum_type
             if underlying_type.kind in (
-                TypeKind.CHAR_U, TypeKind.UCHAR, TypeKind.CHAR16, TypeKind.CHAR32, TypeKind.USHORT,
-                TypeKind.UINT, TypeKind.ULONG, TypeKind.ULONGLONG, TypeKind.UINT128
+                    TypeKind.CHAR_U, TypeKind.UCHAR, TypeKind.CHAR16, TypeKind.CHAR32, TypeKind.USHORT,
+                    TypeKind.UINT, TypeKind.ULONG, TypeKind.ULONGLONG, TypeKind.UINT128
             ):
                 self._enum_value = \
-                  conf.lib.clang_getEnumConstantDeclUnsignedValue(self)
+                    conf.lib.clang_getEnumConstantDeclUnsignedValue(self)
             else:
                 self._enum_value = conf.lib.clang_getEnumConstantDeclValue(self)
         return self._enum_value
@@ -1567,7 +1569,7 @@ class Cursor(Structure):
         """Return the Objective-C type encoding as a str."""
         if not hasattr(self, '_objc_type_encoding'):
             self._objc_type_encoding = \
-              conf.lib.clang_getDeclObjCTypeEncoding(self)
+                conf.lib.clang_getDeclObjCTypeEncoding(self)
 
         return self._objc_type_encoding
 
@@ -1782,7 +1784,7 @@ class StorageClass(object):
         return StorageClass._kinds[id]
 
     def __repr__(self):
-        return 'StorageClass.%s' % (self.name, )
+        return 'StorageClass.%s' % (self.name,)
 
 
 StorageClass.INVALID = StorageClass(0)
@@ -1793,6 +1795,7 @@ StorageClass.PRIVATEEXTERN = StorageClass(4)
 StorageClass.OPENCLWORKGROUPLOCAL = StorageClass(5)
 StorageClass.AUTO = StorageClass(6)
 StorageClass.REGISTER = StorageClass(7)
+
 
 ### C++ access specifiers ###
 
@@ -1810,7 +1813,7 @@ class AccessSpecifier(BaseEnumeration):
         return self.value
 
     def __repr__(self):
-        return 'AccessSpecifier.%s' % (self.name, )
+        return 'AccessSpecifier.%s' % (self.name,)
 
 
 AccessSpecifier.INVALID = AccessSpecifier(0)
@@ -1818,6 +1821,7 @@ AccessSpecifier.PUBLIC = AccessSpecifier(1)
 AccessSpecifier.PROTECTED = AccessSpecifier(2)
 AccessSpecifier.PRIVATE = AccessSpecifier(3)
 AccessSpecifier.NONE = AccessSpecifier(4)
+
 
 ### Type Kinds ###
 
@@ -1837,7 +1841,7 @@ class TypeKind(BaseEnumeration):
         return conf.lib.clang_getTypeKindSpelling(self.value)
 
     def __repr__(self):
-        return 'TypeKind.%s' % (self.name, )
+        return 'TypeKind.%s' % (self.name,)
 
 
 TypeKind.INVALID = TypeKind(0)
@@ -1905,7 +1909,7 @@ class RefQualifierKind(BaseEnumeration):
         return self.value
 
     def __repr__(self):
-        return 'RefQualifierKind.%s' % (self.name, )
+        return 'RefQualifierKind.%s' % (self.name,)
 
 
 RefQualifierKind.NONE = RefQualifierKind(0)
@@ -2212,7 +2216,6 @@ SpellingCache = {
 
 
 class CompletionChunk:
-
     class Kind:
 
         def __init__(self, name):
@@ -2303,7 +2306,6 @@ completionChunkKindMap = {
 
 
 class CompletionString(ClangObject):
-
     class Availability:
 
         def __init__(self, name):
@@ -2403,15 +2405,14 @@ class CodeCompletionResults(ClangObject):
 
     @property
     def diagnostics(self):
-
         class DiagnosticsItr:
 
             def __init__(self, ccr):
                 self.ccr = ccr
 
             def __len__(self):
-                return int(\
-                  conf.lib.clang_codeCompleteGetNumDiagnostics(self.ccr))
+                return int( \
+                    conf.lib.clang_codeCompleteGetNumDiagnostics(self.ccr))
 
             def __getitem__(self, key):
                 return conf.lib.clang_codeCompleteGetDiagnostic(self.ccr, key)
@@ -2775,14 +2776,14 @@ class TranslationUnit(ClangObject):
             raise TranslationUnitSaveError(result, 'Error saving TranslationUnit.')
 
     def codeComplete(
-        self,
-        path,
-        line,
-        column,
-        unsaved_files=None,
-        include_macros=False,
-        include_code_patterns=False,
-        include_brief_comments=False
+            self,
+            path,
+            line,
+            column,
+            unsaved_files=None,
+            include_macros=False,
+            include_code_patterns=False,
+            include_brief_comments=False
     ):
         """
         Code complete in this translation unit.
@@ -3304,7 +3305,7 @@ def register_function(lib, item, ignore_errors):
     try:
         func = getattr(lib, item[0])
     except AttributeError as e:
-        msg = str(e) + ". Please ensure that your python bindings are "\
+        msg = str(e) + ". Please ensure that your python bindings are " \
                        "compatible with your libclang.so version."
         if ignore_errors:
             return

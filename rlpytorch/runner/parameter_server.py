@@ -5,13 +5,16 @@
 # LICENSE file in the root directory of this source tree.
 
 import torch.multiprocessing as _mp
+
 mp = _mp.get_context('spawn')
 
 # XXX hack fix path
 import sys, os
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'elf'))
 import utils_elf
 import random
+
 '''
 Usage:
     In process main function, run the following and then you get a shared model.
@@ -148,13 +151,13 @@ class ParameterServer(object):
 class SharedData:
 
     def __init__(
-        self,
-        total_process,
-        mi,
-        batch_template,
-        cb_remote_initialize=None,
-        cb_remote_batch_process=None,
-        args=None
+            self,
+            total_process,
+            mi,
+            batch_template,
+            cb_remote_initialize=None,
+            cb_remote_batch_process=None,
+            args=None
     ):
         """ Initialize `SharedData` class with a few hooks
 
@@ -171,7 +174,7 @@ class SharedData:
         self.cb_remote_batch_process = cb_remote_batch_process
         self.args = args
 
-        #def get_gpu_id(i): return i + 1
+        # def get_gpu_id(i): return i + 1
         def get_gpu_id(i):
             return 0
 

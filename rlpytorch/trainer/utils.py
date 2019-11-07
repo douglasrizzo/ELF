@@ -90,7 +90,8 @@ class ValueStats:
         if self.counter > 0:
             try:
                 return "%s%s[%d]: avg: %.5f, min: %.5f[%d], max: %.5f[%d]" \
-                        % (info, name, self.counter, self.summation / self.counter, self.min_value, self.min_idx, self.max_value, self.max_idx)
+                       % (info, name, self.counter, self.summation / self.counter, self.min_value, self.min_idx,
+                          self.max_value, self.max_idx)
             except:
                 return "%s%s[Err]:" % (info, name)
         else:
@@ -105,7 +106,7 @@ class ValueStats:
         self.min_idx = None
 
 
-def topk_accuracy(output, target, topk=(1, )):
+def topk_accuracy(output, target, topk=(1,)):
     """Computes the precision@k for the specified values of k"""
     maxk = max(topk)
     batch_size = target.size(0)

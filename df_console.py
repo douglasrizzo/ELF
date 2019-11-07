@@ -47,7 +47,7 @@ def plot_plane(v):
     print(s)
 
 
-def topk_accuracy2(batch, state_curr, topk=(1, )):
+def topk_accuracy2(batch, state_curr, topk=(1,)):
     pi = state_curr["pi"]
     import torch
     if isinstance(pi, torch.autograd.Variable):

@@ -104,6 +104,7 @@ if __name__ == '__main__':
     cnt_forward = 0
     cnt_project = 0
 
+
     def actor(batch):
         """
         import pdb
@@ -112,20 +113,24 @@ if __name__ == '__main__':
         """
         return dict(a=[0] * batch["s"].size(1))
 
+
     def reduced_predict():
         global cnt_predict
         cnt_predict += 1
         # print("in reduced_predict, cnt_predict = %d" % cnt_predict)
+
 
     def reduced_forward():
         global cnt_forward
         cnt_forward += 1
         # print("in reduced_forward, cnt_forward = %d" % cnt_forward)
 
+
     def reduced_project():
         global cnt_project
         cnt_project += 1
         # print("in reduced_project, cnt_project = %d" % cnt_project)
+
 
     # GC = loader.initialize()
     GC = loader.initialize_reduced_service()
@@ -138,11 +143,12 @@ if __name__ == '__main__':
     GC.Start()
 
     import tqdm
+
     for _ in tqdm.trange(nIter):
         b = datetime.now()
         GC.Run()
         elapsed_wait_only += (datetime.now() - b).total_seconds() * 1000
-        #img = np.array(infos[0].data.image, copy=False)
+        # img = np.array(infos[0].data.image, copy=False)
 
     print("#predict: %d, #forward: %d, #project: %d" % (cnt_predict, cnt_forward, cnt_project))
 

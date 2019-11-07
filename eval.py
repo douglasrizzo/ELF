@@ -4,7 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
@@ -24,6 +24,7 @@ if __name__ == '__main__':
     env["mi"].add_model("actor", model, cuda=not args.gpu is None, gpu_id=args.gpu)
     env["mi"]["actor"].eval()
 
+
     def actor(batch):
         reply = evaluator.actor(batch)
         '''
@@ -36,6 +37,7 @@ if __name__ == '__main__':
         '''
         eval_iters.stats.feed_batch(batch)
         return reply
+
 
     evaluator.setup(sampler=env["sampler"], mi=env["mi"])
 

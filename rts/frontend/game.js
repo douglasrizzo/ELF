@@ -16,7 +16,7 @@ var cell_size = 50;
 var rect_size = 50;
 var unit_size = 32;
 var cell_colors = ['#404040', 'blue', 'black'];
-var player_colors = ['blue', 'red', 'yellow']
+var player_colors = ['blue', 'red', 'yellow'];
 
 var unit_names_minirts = ["RESOURCE", "WORKER", "MELEE_ATTACKER", "RANGE_ATTACKER", "BARRACKS", "BASE"];
 var unit_names_flag = ["FLAG_BASE", "FLAG_ATHLETE", "FLAG"];
@@ -58,7 +58,7 @@ range2.oninput = function(){
             send_cmd(tick + ' W');
         }
     }
-}
+};
 
 document.body.appendChild(range2);
 
@@ -113,7 +113,7 @@ range1.style.width = "300px";
 range1.style.height = "30px";
 range1.oninput = function(){
     send_cmd(tick + ' S ' + this.value);
-}
+};
 document.body.appendChild(range1);
 
 document.body.appendChild(canvas);
@@ -218,7 +218,7 @@ var draw_hp = function(bbox, states, font_color, player_color){
 		ctx.fillText(state_str,x2 + 10, Math.floor((y1 + y2) / 2));
 		ctx.closePath();
     }
-}
+};
 
 var onUnit = function(u, isSelected) {
     var player_color = player_colors[u.player_id];
@@ -269,7 +269,7 @@ var onUnit = function(u, isSelected) {
 var onBullet = function(bullet) {
     var xy = convert_xy(bullet.p.x, bullet.p.y);
     draw_sprites(bullets, xy[0], xy[1], bullet.state);
-}
+};
 
 var onPlayerStats = function(player) {
     if (player.player_id == 2) {
@@ -278,12 +278,12 @@ var onPlayerStats = function(player) {
     var x1 = left_frame_width + 10;
     var y1 = (player.player_id + 1) * 50;
     var label = ["PlayerId", player.player_id, "Resource", player.resource].join(" ");
-    ctx.beginPath()
+    ctx.beginPath();
 	ctx.fillStyle = "Black";
 	ctx.font = "15px Arial";
 	ctx.fillText(label, x1, y1);
     ctx.closePath();
-}
+};
 
 // Draw units that have been seen.
 var onPlayerSeenUnits = function(m) {
@@ -298,7 +298,7 @@ var onPlayerSeenUnits = function(m) {
 
         ctx.globalAlpha = oldAlpha;
     }
-}
+};
 
 var draw_state = function(u) {
     var x1 = left_frame_width + 10;
@@ -321,7 +321,7 @@ var draw_state = function(u) {
             draw_hp([x1, y1, x1 + 100, y1 + 15], [ratio, label], 'black', '');
         }
     }
-}
+};
 
 var convert_xy = function(x, y){
     var xc = x * cell_size + Math.floor(rect_size / 2);
@@ -351,7 +351,7 @@ var load_sprites = function(spec) {
 };
 
 var draw_sprites = function(spec, px, py, ori) {
-    var image = spec["image"]
+    var image = spec["image"];
     var width = image.width;
     var height = image.height;
     if (!("_sizes" in spec)) {
@@ -453,7 +453,7 @@ sprites["FLAG_BASE"] = load_sprites({
 
 var render = function (game) {
     tick = game.tick;
-    ctx.beginPath()
+    ctx.beginPath();
 	ctx.fillStyle = "Black";
 	ctx.font = "15px Arial";
     var label = "Tick: " + tick;
@@ -520,7 +520,7 @@ var main = function () {
   dealer = new WebSocket('ws://localhost:8000');
   dealer.onopen = function(event) {
     console.log("WS Opened.");
-  }
+  };
 
   dealer.onmessage = function (message) {
     var s = message.data;

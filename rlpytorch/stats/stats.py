@@ -56,7 +56,7 @@ class EvalCount:
             # This game is over, remove game id if it is already in ids
             del self.ids[id]
             self.num_terminal += 1
-        #else:
+        # else:
         #    This should only happen when seq=0
         #    print("id=%s seq=%d, winner=%d" % (id, seq, winner))
 

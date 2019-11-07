@@ -4,12 +4,12 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
 
-from rlpytorch import *
+from rlpytorch import SingleProcessRun, load_env, Trainer
 
 if __name__ == '__main__':
     trainer = Trainer()

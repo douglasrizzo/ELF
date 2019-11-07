@@ -61,11 +61,12 @@ if __name__ == '__main__':
     GC.Start()
 
     import tqdm
+
     for _ in tqdm.trange(nIter):
         b = datetime.now()
         GC.Run()
         elapsed_wait_only += (datetime.now() - b).total_seconds() * 1000
-        #img = np.array(infos[0].data.image, copy=False)
+        # img = np.array(infos[0].data.image, copy=False)
 
     elapsed = (datetime.now() - before).total_seconds() * 1000
     print("elapsed = %.4lf ms, elapsed_wait_only = %.4lf" % (elapsed, elapsed_wait_only))

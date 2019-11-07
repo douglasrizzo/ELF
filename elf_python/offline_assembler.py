@@ -50,7 +50,7 @@ class BatchAssemblerOffline:
         mem = self.memory[agent]
 
         #
-        #if hist_fill is not None:
+        # if hist_fill is not None:
         #    while len(mem) < self.exp_op.hist_size():
         #        mem.add(hist_fill)
         mem.add(m)
