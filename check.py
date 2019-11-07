@@ -35,7 +35,7 @@ class StatsCollector:
         # import pdb
         # pdb.set_trace()
         # Return random actions.
-        actions = [random.randint(0, self.params["num_action"]-1) for i in range(batchsize)]
+        actions = [random.randint(0, self.params["num_action"]-1) for _ in range(batchsize)]
 
         # Check whether id is duplicated.
         ids = set()
@@ -59,7 +59,7 @@ class StatsCollector:
 
         return dict(a=actions)
 
-    def train(self, sel, sel_gpu):
+    def train(self, sel):
         T = sel["id"].size(0)
         batchsize = sel["id"].size(1)
 

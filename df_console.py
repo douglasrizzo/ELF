@@ -208,7 +208,7 @@ class DFConsole:
 
         GC.Start()
 
-        evaluator.episode_start(0)
+        evaluator.episode_start()
 
         while True:
             GC.Run()

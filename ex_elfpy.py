@@ -63,7 +63,7 @@ class Trainer:
     def train(self, cpu_batch, gpu_batch):
         pass
 
-    def actor(self, cpu_batch, gpu_batch):
+    def actor(self, cpu_batch):
         # Random
         batchsize = cpu_batch[0]["s"].size(0)
         action = torch.IntTensor(batchsize)

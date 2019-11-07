@@ -102,7 +102,7 @@ def sample_multinomial(state_curr, args, node="pi", greedy=False):
         ry = len(probs[0])
         batchsize = probs[0][0].size(0)
 
-        actions = [ np.zeros((rx, ry), dtype='int32') for i in range(batchsize) ]
+        actions = [ np.zeros((rx, ry), dtype='int32') for _ in range(batchsize) ]
 
         for i, actionx_prob in enumerate(probs):
             for j, action_prob in enumerate(actionx_prob):

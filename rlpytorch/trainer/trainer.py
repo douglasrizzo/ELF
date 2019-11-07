@@ -205,7 +205,7 @@ class Trainer:
         self.counter.summary(global_counter=i)
         print("")
 
-        self.evaluator.episode_summary(i)
+        self.evaluator.episode_summary()
         self.timer.Restart()
 
     def setup(self, rl_method=None, mi=None, sampler=None):

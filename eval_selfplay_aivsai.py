@@ -28,11 +28,11 @@ if __name__ == '__main__':
 
     def summary(i):
         for e in evaluators:
-            e.episode_summary(i)
+            e.episode_summary()
 
     def start(i):
         for e in evaluators:
-            e.episode_start(i)
+            e.episode_start()
 
     runner.setup(GC, episode_summary=summary, episode_start=start)
     runner.run()

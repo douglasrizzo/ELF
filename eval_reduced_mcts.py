@@ -48,7 +48,7 @@ if __name__ == '__main__':
     GC.reg_callback("reduced_forward", reduced_forward)
     GC.reg_callback("reduced_project", reduced_project)
 
-    evaluator.episode_start(0)
+    evaluator.episode_start()
     GC.Start()
 
     for _ in eval_iters.iters():

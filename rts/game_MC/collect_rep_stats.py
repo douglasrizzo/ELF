@@ -39,7 +39,7 @@ def get_content(f):
 
         m = matcher.match(comment)
         if m:
-            player_id = int(m.group(1))
+            # player_id = int(m.group(1))
             value = float(m.group(3))
             policy = [ float(v) for v in m.group(4).split(",") ]
             values.append(value)

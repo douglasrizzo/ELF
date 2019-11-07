@@ -130,7 +130,7 @@ if __name__ == '__main__':
         batchsize = batch["s"].size(1)
         actions = [
             random.randint(0, GC.params["num_action"] - 1)
-            for i in range(batchsize)
+            for _ in range(batchsize)
         ]
         reply = dict(a=actions)
         '''
@@ -141,7 +141,7 @@ if __name__ == '__main__':
         '''
         return reply
 
-    def train(batch):
+    def train():
         global train_count
         # pickle.dump(
         #     sel.to_numpy(),

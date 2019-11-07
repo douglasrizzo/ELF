@@ -125,7 +125,7 @@ class BatchAssembler:
         # qs has the following structure:
         # len(qs) == T
         # len(qs[t]) == n (batchsize)
-        qs = [ list() for t in range(self.T)]
+        qs = [ list() for _ in range(self.T)]
 
         # Each element of the batch comes from a different environemnt.
         counts_dup = Counter(self.counts)

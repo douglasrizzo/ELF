@@ -110,17 +110,17 @@ if __name__ == '__main__':
         """
         return dict(a=[0]*batch["s"].size(1))
 
-    def reduced_predict(batch):
+    def reduced_predict():
         global cnt_predict
         cnt_predict += 1
         # print("in reduced_predict, cnt_predict = %d" % cnt_predict)
 
-    def reduced_forward(batch):
+    def reduced_forward():
         global cnt_forward
         cnt_forward += 1
         # print("in reduced_forward, cnt_forward = %d" % cnt_forward)
 
-    def reduced_project(batch):
+    def reduced_project():
         global cnt_project
         cnt_project += 1
         # print("in reduced_project, cnt_project = %d" % cnt_project)

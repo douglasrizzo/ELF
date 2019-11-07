@@ -39,11 +39,11 @@ if __name__ == '__main__':
 
     def summary(i):
         trainer.episode_summary(i)
-        evaluator.episode_summary(i)
+        evaluator.episode_summary()
 
     def start(i):
         trainer.episode_start(i)
-        evaluator.episode_start(i)
+        evaluator.episode_start()
 
     runner.setup(GC, episode_summary=summary, episode_start=start)
     runner.run()

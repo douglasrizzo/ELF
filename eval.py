@@ -40,7 +40,7 @@ if __name__ == '__main__':
     GC.reg_callback("actor", actor)
     GC.Start()
 
-    evaluator.episode_start(0)
+    evaluator.episode_start()
 
     for _ in eval_iters.iters():
         GC.Run()
