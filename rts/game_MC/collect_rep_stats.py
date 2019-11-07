@@ -14,7 +14,7 @@ import sys
 
 import tqdm
 
-matcher = re.compile(r"\[(\d):(.*?)\] V: ([-\.\d]+), Prob: (.*?)$")
+matcher = re.compile(r"\[(\d):(.*?)\] V: ([-.\d]+), Prob: (.*?)$")
 win_matcher = re.compile("\[(\d+)\] player (\d+):(\d+) won")
 prev_seen_matcher = re.compile("\[(\d):(.*?)\] PrevSeenCount: (\d+)")
 
