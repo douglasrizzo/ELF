@@ -31,11 +31,7 @@ install:
   - DEPS_DIR=${HOME}/deps
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - python3-config --cflags --ldflags
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
   - bash miniconda.sh -b -p $HOME/miniconda
   - source "$HOME/miniconda/etc/profile.d/conda.sh"
   - hash -r
@@ -46,7 +42,7 @@ install:
   # Replace dep1 dep2 ... with your dependencies
   - conda create -q -n test_env python=${MINICONDA_PYTHON_VERSION}
   - conda activate test_env
-  - set PYTHON_EXECUTABLE=${HOME}/miniconda/bin/python
+  - export PYTHON_EXECUTABLE=${HOME}/miniconda/bin/python
   - |
     CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
     mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
