@@ -24,11 +24,11 @@ You should be able to get ~630 mean/864 max, after 12 hours training with 16 CPU
 
 Training
 =============
-To train a model in atari game, go to `[root directory]` and run the following command (you can also check `./train_atari.sh`):
+To train a model in atari game, go to `[root directory]` and run the following command (you can also check `./misc/train_atari.sh`):
 
-```bash
+```shell
 game=./atari/game model=actor_critic model_file=./atari/model \
-python3 train.py
+python3 misc/train.py
     --rom_file [your rom]
     -—batchsize 128         # Batchsize
     —-freq_update 50        # How often the actor used to predict the action gets updated.
@@ -40,11 +40,11 @@ python3 train.py
 
 Evaluation
 ==============
-To evaluate, try the following command (or you can check `./eval_atari.sh`):
+To evaluate, try the following command (or you can check `./misc/eval_atari.sh`):
 
-```bash
+```shell
 game=./atari/game model=actor_critic model_file=./atari/model \
-python3 eval.py
+python3 misc/eval.py
     --num_games 128 --batchsize 32 --tqdm --eval_gpu [your gpu id]
     --rom_file [your rom]
     --load [your model]

@@ -7,7 +7,7 @@ See [here](https://github.com/facebookresearch/darkforestGo) for the orignal LUA
 Training  
 ==========
 ```
-sh ./train_df.sh --gpu [your gpu] --no_leaky_relu --list_file [your list of .sgf files]
+sh ./misc/train_df.sh --gpu [your gpu] --no_leaky_relu --list_file [your list of .sgf files]
 ```
 Training with a single GPU. On GoGoD, Top 1 is around 51.2% after 8 days. Test performance is around 1% lower. 
 ```
@@ -22,7 +22,7 @@ Test
 =========
 Run the same command but without backpropagation.
 ```
-sh ./train_df.sh --gpu [your gpu] --load [your model] --multipred_no_backprop
+sh ./misc/train_df.sh --gpu [your gpu] --load [your model] --multipred_no_backprop
 ```
 
 Interactive console   
@@ -30,12 +30,12 @@ Interactive console
 You can play against the trained model. Rank is not established. 
 
 ```
-sh ./console_df.sh --load [your model] --gpu [your gpu id] --data_aug 0
+sh ./misc/console_df.sh --load [your model] --gpu [your gpu id] --data_aug 0
 ```
 
 If you want to check training result interactively, use:
 ```
-sh ./console_df_check_train.sh --load [your model] --gpu [your gpu id] --list_file [a file contains .sgf file list] --data_aug 0 --verbose
+sh ./misc/console_df_check_train.sh --load [your model] --gpu [your gpu id] --list_file [a file contains .sgf file list] --data_aug 0 --verbose
 ```
 Here is a sample output:
 ```

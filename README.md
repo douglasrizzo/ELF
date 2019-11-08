@@ -63,7 +63,7 @@ make
 
 # Train the model
 cd ../..
-sh ./train_minirts.sh --gpu 0
+sh ./misc/train_minirts.sh --gpu 0
 ```
 
 Supported Environments   
@@ -167,9 +167,9 @@ To train a model for MiniRTS, please first compile `./rts/game_MC` (See the inst
 
 Then please run the following commands in the current directory (you can also reference `train_minirts.sh`):
 
-```bash
+```shell
 game=./rts/game_MC/game model=actor_critic model_file=./rts/game_MC/model \ 
-python3 train.py 
+python3 misc/train.py 
     --num_games 1024 --batchsize 128                                                                  # Set number of games to be 1024 and batchsize to be 128.  
     --freq_update 50                                                                                  # Update behavior policy after 50 updates of the model.
     --players "fs=50,type=AI_NN,args=backup/AI_SIMPLE|delay/0.99|start/500;fs=20,type=AI_SIMPLE"      # Specify AI and its opponent, separated by semicolon. `fs` is frameskip that specifies How often your opponent makes a decision (e.g., fs=20 means it acts every 20 ticks)
@@ -212,9 +212,9 @@ Command arguments run.py --batchsize 128 --freq_update 50 --fs_opponent 20 --lat
 ```
 
 To evaluate a model for MiniRTS, try the following command (you can also reference `eval_minirts.sh`):
-```bash
+```shell
 game=./rts/game_MC/game model=actor_critic model_file=./rts/game_MC/model \ 
-python3 eval.py 
+python3 misc/eval.py 
     --load [your model]
     --batchsize 128 
     --players "fs=50,type=AI_NN;fs=20,type=AI_SIMPLE"  
@@ -248,7 +248,7 @@ SelfPlay
 =============
 Try the following script if you want to do self-play in Minirts. It will start with two bots, both starting with the pre-trained model. One bot will be trained over time, while the other is held fixed. If you just want to check their winrate without training, try `--actor_only`.
 ```
-sh ./selfplay_minirts.sh [your pre-trained model] 
+sh ./misc/selfplay_minirts.sh [your pre-trained model] 
 ```
 
 Visualization  
@@ -257,11 +257,11 @@ Visualization
 To visualize a trained bot, you can specify `--save_replay_prefix [replay_file_prefix]` when running `eval.py` to save (lots of) replays. Note that the same flag can also be applied to training/selfplay. 
 
 All replay files contain action sequences, are in `.rep` and should reproduce the exact same game when loaded. To load the replay in the command line, using the following:
-```bash
+```shell
 ./minirts-backend replay --load_replay [your replay] --vis_after 0
 ```
 and open the webpage `./rts/frontend/minirts.html` to check the game. To load and run the replay in the command line only (e.g, if you just want to quickly see who win the game), try:
-```bash
+```shell
 ./minirts-backend replay_cmd --load_replay [your replay]
 ```
 
