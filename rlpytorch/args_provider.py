@@ -135,7 +135,7 @@ class ArgsProvider:
         """ return all keys in _define_args in a list """
         return [k for k, _ in self._define_args]
 
-    # The following are called in ArgsPrivider.Load:
+    # The following are called in ArgsProvider.Load:
     def _collect(self, args_list):
         group_name = type(self._call_from).__name__ if self._call_from is not None else "Options"
         args_list += [(group_name, self._define_args)]

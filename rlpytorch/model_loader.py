@@ -121,7 +121,7 @@ def load_env(envs, num_models=None, overrides=dict(), defaults=dict(), **kwargs)
             ``game`` : game module
             ``method``: Learning method used
             ``model_loaders``: loaders for model
-        all_args: loaded arguments from `ArgsPrivider`
+        all_args: loaded arguments from `ArgsProvider`
     """
     game = load_module(envs["game"]).Loader()
     model_file = load_module(envs["model_file"])
