@@ -1,1 +1,3 @@
-game=./go/game model=df_policy model_file=./go/df_model python3 misc/df_console.py --list_file ~/local/go/go_gogod/train.lst --data_aug 0 "$@"
+game=./go/game model=df_policy model_file=./go/df_model \
+    python3 misc/df_console.py --list_file ~/local/go/go_gogod/train.lst \
+                               --data_aug 0 "$@"
