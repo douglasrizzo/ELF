@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     args_providers = [sampler, trainer, game, runner, model_loader, method]
 
-    all_args = ArgsProvider.Load(par ser, args_providers)
+    all_args = ArgsProvider.Load(parser, args_providers)
 
     GC = game.initialize()
     # GC.setup_gpu(0)
