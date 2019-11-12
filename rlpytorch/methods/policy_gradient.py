@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
-from .utils import *
+from .utils import accumulate, average_norm_clip, add_err
 from ..args_provider import ArgsProvider
 
 

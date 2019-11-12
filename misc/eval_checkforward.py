@@ -12,7 +12,7 @@ from collections import defaultdict
 
 from torch.autograd import Variable
 
-from rlpytorch import *
+from rlpytorch import ArgsProvider, EvalIters, load_env
 from rlpytorch.utils import HistState
 
 

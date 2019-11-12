@@ -12,7 +12,9 @@ from queue import Queue
 import numpy as np
 import torch
 
-from .utils import *
+import sys
+
+from .utils import check_done_flag, queue_get, queue_put
 
 __all__ = ["MemoryReceiver"]
 

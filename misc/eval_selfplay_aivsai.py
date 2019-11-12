@@ -9,7 +9,7 @@
 
 import os
 
-from rlpytorch import *
+from rlpytorch import ModelInterface, SingleProcessRun, Evaluator, load_env
 
 if __name__ == '__main__':
     verbose = False

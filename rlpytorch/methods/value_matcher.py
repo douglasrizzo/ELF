@@ -7,7 +7,7 @@
 import torch.nn as nn
 from torch.autograd import Variable
 
-from .utils import *
+from .utils import average_norm_clip
 from ..args_provider import ArgsProvider
 
 
