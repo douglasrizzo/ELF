@@ -1,3 +1,5 @@
+#!/bin/sh
+
 MODEL=$1
 
 # this script accepts the --gpu argument too

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 game=./rts/game_MC/game model=actor_critic model_file=./rts/game_MC/model \
     python3 misc/eval_selfplay_aivsai.py --num_games 1024 \
                                          --batchsize 128 \

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 game=./rts/game_MC/game model=actor_critic model_file=./rts/game_MC/model_unit_cmd \
     python3 misc/train.py --batchsize 128 \
                           --freq_update 1 \

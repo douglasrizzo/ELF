@@ -1,3 +1,5 @@
+#!/bin/sh
+
 ROM=$1
 GPU=$2
 

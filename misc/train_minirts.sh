@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 game=./rts/game_MC/game model=actor_critic model_file=./rts/game_MC/model \
     python3 misc/train.py --batchsize 128 \

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 ROM=$1
 MODEL=$2
 GPU=$3

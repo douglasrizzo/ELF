@@ -1,3 +1,5 @@
+#!/bin/sh
+
 MODEL=$1
 FRAMESKIP=$2
 NUM_EVAL=10000
